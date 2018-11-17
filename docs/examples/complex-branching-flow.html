@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title></title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+  <link href="../../css/dest/main.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-12">
+          <h1>Complex branching flow</h1>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div id="output" class="output">
+            <h3>
+              Tree
+              <div id="tree-controls" class="tree-controls">
+                <button class="btn" id="stop-auto-play" class="stop-auto-play">
+                  <i class="fas fa-stop" title="Stop auto-play"></i>
+                </button>
+                <button class="btn" id="start-auto-play" class="start-auto-play">
+                  <i class="fas fa-play fa-sm" title="Auto-play"></i>
+                </button>
+              </div>
+            </h3>
+            <hr>
+            <div id="tree" class="tree"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div id="output" class="output debug-output">
+            <h3>Debug</h3>
+            <hr>
+            <pre id="debug" class="debug"></pre>
+          </div>
+        </div>
+      </div>      
+
+    </div>
+
+    <script src="../../js/dest/complex-branching-flow.js"></script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+[
+  {
+    "type": "step",
+    "id": "createAccount"
+  },
+  {
+    "type": "step",
+    "id": "profileBasic"
+  },
+  {
+    "type": "step",
+    "id": "profilePhoto"
+  },
+  {
+    "type": "step",
+    "id": "profileAddress"
+  },
+  {
+    "type": "step",
+    "id": "primaryObjective"
+  },
+  {
+    "type": "fork",
+    "id": "buyerOrSeller",
+    "branches": {
+      "buyer": [
+        {
+          "type": "step",
+          "id": "subscribe"
+        },
+        {
+          "type": "fork",
+          "id": "freeOrPaid",
+          "branches": {
+            "free": [
+              {
+                "type": "step",
+                "id": "upsellTShirt"
+              },
+              {
+                "type": "fork",
+                "id": "tShirtUpsell",
+                "branches": {
+                  "willBuyTshirt": [
+                    {
+                      "type": "step",
+                      "id": "profileCreditCard"
+                    },
+                    {
+                      "type": "step",
+                      "id": "reviewCart"
+                    },
+                    {
+                      "type": "step",
+                      "leaf": "true",
+                      "id": "congrats"
+                    }
+                  ],
+                  "willNotBuyTshirt": [
+                    {
+                      "type": "step",
+                      "id": "congrats"
+                    }
+                  ]
+                }
+              }
+            ],
+            "paid": [
+              {
+                "type": "step",
+                "id": "profileCreditCard"
+              },
+              {
+                "type": "step",
+                "id": "upsellTShirt"
+              },
+              {
+                "type": "fork",
+                "id": "tShirtUpsellAlreadyPaid",
+                "branches": {
+                  "willBuyTshirt": [
+                    {
+                      "type": "step",
+                      "id": "reviewCart"
+                    },
+                    {
+                      "type": "step",
+                      "id": "congrats"
+                    }
+                  ],
+                  "willNotBuyTshirt": [
+                    {
+                      "type": "step",
+                      "id": "congrats"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "seller": [
+        {
+          "type": "step",
+          "id": "profileBankInfo"
+        },
+        {
+          "type": "step",
+          "id": "addInventory"
+        },
+        {
+          "type": "step",
+          "id": "upsellTShirt"
+        },
+        {
+          "type": "fork",
+          "id": "tShirtUpsellAlreadyPaid",
+          "branches": {
+            "tShirtUpsellAlreadyPaid": [
+              {
+                "type": "step",
+                "id": "profileCreditCard"
+              },
+              {
+                "type": "step",
+                "id": "reviewCart"
+              },
+              {
+                "type": "step",
+                "id": "congrats"
+              }
+            ],
+            "willNotBuyTshirt": [
+              {
+                "type": "step",
+                "id": "congrats"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+
+]
