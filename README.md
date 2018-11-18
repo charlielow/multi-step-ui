@@ -1,12 +1,12 @@
 # multi-step-ui
 
-__WARNING__  this project is currently in pre-release beta, under development and is subject to change!
+__WARNING__  this project is currently in pre-release beta, under development and subject to change
 
 ### Docs
 
 __Example pages__
 
-[https://charlielow.github.io/multi-step-ui/](https://charlielow.github.io/multi-step-ui/)
+[https://charlielow.github.io/multi-step-ui/docs](https://charlielow.github.io/multi-step-ui/docs)
 
 #### Tree (multi-step-ui)
 
