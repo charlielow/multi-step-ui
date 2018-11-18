@@ -2,8 +2,13 @@
 
 __WARNING__  this project is currently in pre-release beta, under development and is subject to change!
 
+### Docs
 
-### Tree (multi-step-ui)
+__Example pages__
+
+https://charlielow.github.io/multi-step-ui/
+
+#### Tree (multi-step-ui)
 
 `config`
 
@@ -13,7 +18,7 @@ __WARNING__  this project is currently in pre-release beta, under development an
 
 `render()`
 
-### Step
+#### Step
 
 `id`
 
@@ -21,7 +26,7 @@ __WARNING__  this project is currently in pre-release beta, under development an
 
 `isValid()`
 
-### Fork
+#### Fork
 
 `id`
 
