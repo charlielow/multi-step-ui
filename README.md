@@ -6,7 +6,7 @@ __WARNING__  this project is currently in pre-release beta, under development an
 
 __Example pages__
 
-https://charlielow.github.io/multi-step-ui/
+[https://charlielow.github.io/multi-step-ui/](https://charlielow.github.io/multi-step-ui/)
 
 #### Tree (multi-step-ui)
 
