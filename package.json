@@ -1,9 +1,16 @@
 {
   "name": "multi-step-ui",
   "version": "0.0.0",
-  "description": "",
+  "private": "true",
+  "homepage": "https://github.com/charlielow/multi-step-ui#readme",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/charlielow/multi-step-ui.git"
+  },
+  "description": "Manage simple or complex, multi-step user flows with or without React",
   "keywords": [
     "multi-step",
+    "user flow",
     "webflow",
     "enrollment",
     "faq",
@@ -11,7 +18,7 @@
     "branching",
     "react"
   ],
-  "main": ".src/multi-step-ui.js",
+  "main": "src/multi-step-ui.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "http-server ./docs -c-1"
