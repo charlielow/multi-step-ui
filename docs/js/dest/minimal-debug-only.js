@@ -162,7 +162,7 @@ window.msuFlow = msuFlow;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.multiStepUi = void 0;
+exports.multiStepUi = exports.Tree = void 0;
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -443,6 +443,7 @@ function () {
 }(); // TODO: modularize, unit test
 
 
+exports.Tree = Tree;
 var util = {
   // TODO: util function for applying some transition to
   // each step in a tree recursively

@@ -314,5 +314,6 @@ const multiStepUi = function (props) {
 };
 
 export {
+  Tree,
   multiStepUi
 };

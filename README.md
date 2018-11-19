@@ -1,14 +1,24 @@
-# multi-step-ui
+# Multi-Step UI
 
-__WARNING__  this project is currently in pre-release beta, under development and subject to change
+___WARNING__  this project is currently in pre-release beta, under development and subject to change_
 
-### Docs
+Manage simple or complex, multi-step user flows
+
+* Support for nested branching
+* Integrate with any view library such as React, or without
+* Small footprint
+
+## Docs
 
 __Example pages__
 
 [https://charlielow.github.io/multi-step-ui/docs](https://charlielow.github.io/multi-step-ui/docs)
 
-#### Tree (multi-step-ui)
+## Install
+
+...
+    
+__Tree (multi-step-ui)__
 
 `config`
 
@@ -18,7 +28,7 @@ __Example pages__
 
 `render()`
 
-#### Step
+__Step__
 
 `id`
 
@@ -26,7 +36,7 @@ __Example pages__
 
 `isValid()`
 
-#### Fork
+__Fork__
 
 `id`
 
