@@ -1,11 +1,11 @@
 {
   "name": "multi-step-ui",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": "true",
   "homepage": "https://github.com/charlielow/multi-step-ui#readme",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/charlielow/multi-step-ui.git"
+    "type": "git",
+    "url": "https://github.com/charlielow/multi-step-ui.git"
   },
   "description": "Manage simple or complex, multi-step user flows with or without React",
   "keywords": [
