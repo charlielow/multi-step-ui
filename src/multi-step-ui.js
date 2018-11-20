@@ -1,4 +1,7 @@
+import { util } from './util';
+
 class Tree {
+  
   constructor (props) {
 
     // Mix props into this
@@ -11,7 +14,6 @@ class Tree {
       /*
         Required
        */
-
       config: [],
 
       /**
@@ -19,7 +21,6 @@ class Tree {
        * Tree render should render whatever layout plus the output of
        * calling render on the current step
        */
-
       render () {
 
       },
@@ -28,7 +29,6 @@ class Tree {
        * Optionally proved an onComplete handler at configuration
        * will be called when the final step (Leaf) is valid
        */
-
       onComplete () {
 
       },
@@ -36,7 +36,7 @@ class Tree {
     }, props);
 
     // Overwrite config, add unique ID etc.
-    this.mapSteps(this.config);
+    this._mapSteps(this.config);
 
     // Tree maintains simple state, data store maintained separately
     this._treeState = {
@@ -53,7 +53,7 @@ class Tree {
    * @param  {Object} config TODO: see documentation
    * @return {Object}        New config
    */
-  mapSteps (config) {
+  _mapSteps (config) {
 
     // FIXME: originally did this in a way which didn't mutate config
     // but changed that to reduce dependencies
@@ -115,7 +115,6 @@ class Tree {
             throw new Error('Fork missing required method: getNextBranch');
           }
 
-
           Object.entries(n.branches).forEach(function ([key, val]) {
             mapEachStep(val);
           });
@@ -128,6 +127,10 @@ class Tree {
     return config;
 
   }
+
+  /////////////////////////////
+  // Navigation ///////////////
+  /////////////////////////////
 
   stepForward () {
 
@@ -174,7 +177,7 @@ class Tree {
   /**
    * Move forward until you can't anymore
    *
-   * @param  {String} toStep Step ID to stop on, if omitted keep going as far as possible
+   * @param {String} toStep Step ID to stop on, if omitted keep going as far as possible
    *
    * TODO: suppress errors on final step
    */
@@ -186,33 +189,21 @@ class Tree {
     while (keepGoing.call(this) && this.stepForward());
   }
 
+  /////////////////////////////
+  /////////////////////////////
+  /////////////////////////////
+
   getStepByUniqueId (uniqueId) {
+    let ret;
 
-    let step;
+    // TODO: break on finding step
+    util.mapEachStep(this.config, function(step, branch) {
+      if (step.uniqueId === uniqueId) {
+        ret = step;
+      }
+    });
 
-    const mapEachStep = function (branch) {
-
-      branch.forEach(function(n) {
-
-        if (n.type === 'step') {
-          if (n.uniqueId === uniqueId) {
-            step = n;
-
-            // TODO: break out
-
-          }
-        } else if (n.type === 'fork') {
-          Object.entries(n.branches).forEach(function ([key, val]) {
-            mapEachStep(val);
-          });
-        }
-      })
-
-    }
-
-    mapEachStep(this.config)
-
-    return step;
+    return ret;
 
   }
 
@@ -224,42 +215,27 @@ class Tree {
       throw new Error('getNextStepUniqueId missing required parameter: currentStepUniqueId');
     }
 
-
-    const mapEachStep = function (branch) {
-
-      branch.forEach(function(n) {
-
-        // TODO: utility function for "isStep"
-        if (n.type === 'step') {
-
-          // Have we found the current step
-          if (n.uniqueId === currentStepUniqueId) {
-            let nextNode = branch[util.indexOfStepInBranch(branch, n) + 1];
-
-            if(!nextNode) {
-              nextStepUniqueId = null;
-              throw 'END'
-            }
-
-            if (nextNode.type === 'step') {
-              nextStepUniqueId = nextNode.uniqueId;
-            } else if (nextNode.type === 'fork') {
-              nextStepUniqueId = nextNode.branches[nextNode.getNextBranch( {tree: this} )][0].uniqueId;
-
-              // TODO: need a way to break out of the loop (low priority, performance won't be a concern here)
-            }
-          }
-        } else if (n.type === 'fork') {
-          Object.entries(n.branches).forEach(function ([key, val]) {
-            mapEachStep(val);
-          });
-        }
-      }, this)
-
-    }
-
     try {
-      mapEachStep.call(this, this.config);
+      util.mapEachStep(this.config, function(step, branch) {
+
+        // Have we found the current step
+        if (step.uniqueId === currentStepUniqueId) {
+          let nextNode = branch[util.indexOfStepInBranch(branch, step) + 1];
+
+          if(!nextNode) {
+            nextStepUniqueId = null;
+            throw 'END'
+          }
+
+          if (nextNode.type === 'step') {
+            nextStepUniqueId = nextNode.uniqueId;
+          } else if (nextNode.type === 'fork') {
+            
+            // If next node is a fork, get the first step of the next branch
+            nextStepUniqueId = nextNode.branches[nextNode.getNextBranch( {tree: this} )][0].uniqueId;
+          }
+        }
+      }.bind(this));
     } catch (err) {
       if (err !== 'END') {
         throw err;
@@ -275,38 +251,6 @@ class Tree {
   }
 
 }
-
-// TODO: modularize, unit test
-const util = {
-
-  // TODO: util function for applying some transition to
-  // each step in a tree recursively
-  // eachStep: function (tree, fn(step) {})  {}
-
-  /**
-   * Return index of n in branch
-   * @param  {Array} branch
-   * @param  {Object} n Step
-   * @return {Number}
-   */
-  indexOfStepInBranch: function(branch, step) {
-    var ret = 0;
-    try {
-      branch.forEach(function(n, i) {
-        ret = i;
-        if (n.uniqueId === step.uniqueId) {
-          throw 'break';
-        }
-      });
-    } catch (err) {
-      if (err !== 'break') {
-        throw err;
-      }
-    }
-    return ret;
-
-  }
-};
 
 // Factory function export
 const multiStepUi = function (props) {

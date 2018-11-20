@@ -23350,6 +23350,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.multiStepUi = exports.Tree = void 0;
 
+var _util = require("./util");
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -23395,7 +23397,8 @@ function () {
       onComplete: function onComplete() {}
     }, props); // Overwrite config, add unique ID etc.
 
-    this.mapSteps(this.config); // Tree maintains simple state, data store maintained separately
+    this._mapSteps(this.config); // Tree maintains simple state, data store maintained separately
+
 
     this._treeState = {
       currentStepUniqueId: this.config[0].uniqueId,
@@ -23411,8 +23414,8 @@ function () {
 
 
   _createClass(Tree, [{
-    key: "mapSteps",
-    value: function mapSteps(config) {
+    key: "_mapSteps",
+    value: function _mapSteps(config) {
       // FIXME: originally did this in a way which didn't mutate config
       // but changed that to reduce dependencies
       // FIXME: how can I make this whole thing more pure?
@@ -23479,7 +23482,10 @@ function () {
 
       mapEachStep(config);
       return config;
-    }
+    } /////////////////////////////
+    // Navigation ///////////////
+    /////////////////////////////
+
   }, {
     key: "stepForward",
     value: function stepForward() {
@@ -23524,7 +23530,7 @@ function () {
     /**
      * Move forward until you can't anymore
      *
-     * @param  {String} toStep Step ID to stop on, if omitted keep going as far as possible
+     * @param {String} toStep Step ID to stop on, if omitted keep going as far as possible
      *
      * TODO: suppress errors on final step
      */
@@ -23539,32 +23545,22 @@ function () {
       while (keepGoing.call(this) && this.stepForward()) {
         ;
       }
-    }
+    } /////////////////////////////
+    /////////////////////////////
+    /////////////////////////////
+
   }, {
     key: "getStepByUniqueId",
     value: function getStepByUniqueId(uniqueId) {
-      var step;
+      var ret; // TODO: break on finding step
 
-      var mapEachStep = function mapEachStep(branch) {
-        branch.forEach(function (n) {
-          if (n.type === 'step') {
-            if (n.uniqueId === uniqueId) {
-              step = n; // TODO: break out
-            }
-          } else if (n.type === 'fork') {
-            Object.entries(n.branches).forEach(function (_ref3) {
-              var _ref4 = _slicedToArray(_ref3, 2),
-                  key = _ref4[0],
-                  val = _ref4[1];
+      _util.util.mapEachStep(this.config, function (step, branch) {
+        if (step.uniqueId === uniqueId) {
+          ret = step;
+        }
+      });
 
-              mapEachStep(val);
-            });
-          }
-        });
-      };
-
-      mapEachStep(this.config);
-      return step;
+      return ret;
     }
   }, {
     key: "getNextStepUniqueId",
@@ -23575,41 +23571,27 @@ function () {
         throw new Error('getNextStepUniqueId missing required parameter: currentStepUniqueId');
       }
 
-      var mapEachStep = function mapEachStep(branch) {
-        branch.forEach(function (n) {
-          // TODO: utility function for "isStep"
-          if (n.type === 'step') {
-            // Have we found the current step
-            if (n.uniqueId === currentStepUniqueId) {
-              var nextNode = branch[util.indexOfStepInBranch(branch, n) + 1];
-
-              if (!nextNode) {
-                nextStepUniqueId = null;
-                throw 'END';
-              }
-
-              if (nextNode.type === 'step') {
-                nextStepUniqueId = nextNode.uniqueId;
-              } else if (nextNode.type === 'fork') {
-                nextStepUniqueId = nextNode.branches[nextNode.getNextBranch({
-                  tree: this
-                })][0].uniqueId; // TODO: need a way to break out of the loop (low priority, performance won't be a concern here)
-              }
-            }
-          } else if (n.type === 'fork') {
-            Object.entries(n.branches).forEach(function (_ref5) {
-              var _ref6 = _slicedToArray(_ref5, 2),
-                  key = _ref6[0],
-                  val = _ref6[1];
-
-              mapEachStep(val);
-            });
-          }
-        }, this);
-      };
-
       try {
-        mapEachStep.call(this, this.config);
+        _util.util.mapEachStep(this.config, function (step, branch) {
+          // Have we found the current step
+          if (step.uniqueId === currentStepUniqueId) {
+            var nextNode = branch[_util.util.indexOfStepInBranch(branch, step) + 1];
+
+            if (!nextNode) {
+              nextStepUniqueId = null;
+              throw 'END';
+            }
+
+            if (nextNode.type === 'step') {
+              nextStepUniqueId = nextNode.uniqueId;
+            } else if (nextNode.type === 'fork') {
+              // If next node is a fork, get the first step of the next branch
+              nextStepUniqueId = nextNode.branches[nextNode.getNextBranch({
+                tree: this
+              })][0].uniqueId;
+            }
+          }
+        }.bind(this));
       } catch (err) {
         if (err !== 'END') {
           throw err;
@@ -23626,14 +23608,60 @@ function () {
   }]);
 
   return Tree;
-}(); // TODO: modularize, unit test
+}(); // Factory function export
 
 
 exports.Tree = Tree;
+
+var multiStepUi = function multiStepUi(props) {
+  return new Tree(props);
+};
+
+exports.multiStepUi = multiStepUi;
+
+},{"./util":30}],30:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.util = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+// TODO: modularize, unit test
 var util = {
-  // TODO: util function for applying some transition to
-  // each step in a tree recursively
-  // eachStep: function (tree, fn(step) {})  {}
+  /**
+   * Run some code on each step in the tree
+   * @param  {Array}   config   Tree.config
+   * @param  {Function} callback recieves current Step and current Branch
+   * @return {undefined}
+   */
+  mapEachStep: function mapEachStep(config, callback) {
+    var _mapEachStep = function _mapEachStep(branch) {
+      branch.forEach(function (n) {
+        if (n.type === 'step') {
+          callback(n, branch);
+        } else if (n.type === 'fork') {
+          Object.entries(n.branches).forEach(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 2),
+                key = _ref2[0],
+                val = _ref2[1];
+
+            _mapEachStep(val);
+          });
+        }
+      });
+    };
+
+    _mapEachStep(config);
+  },
 
   /**
    * Return index of n in branch
@@ -23660,12 +23688,7 @@ var util = {
 
     return ret;
   }
-}; // Factory function export
-
-var multiStepUi = function multiStepUi(props) {
-  return new Tree(props);
 };
-
-exports.multiStepUi = multiStepUi;
+exports.util = util;
 
 },{}]},{},[12]);
