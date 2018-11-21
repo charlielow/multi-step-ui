@@ -1,15 +1,13 @@
-import { util } from './util';
+import util from './util';
 
 class Tree {
-  
-  constructor (props) {
-
+  constructor(props) {
     // Mix props into this
     Object.assign(this, {
 
-      ////////////////////////////
+      // //////////////////////////
       // Supported config props //
-      ////////////////////////////
+      // //////////////////////////
 
       /*
         Required
@@ -21,7 +19,7 @@ class Tree {
        * Tree render should render whatever layout plus the output of
        * calling render on the current step
        */
-      render () {
+      render() {
 
       },
 
@@ -29,7 +27,7 @@ class Tree {
        * Optionally proved an onComplete handler at configuration
        * will be called when the final step (Leaf) is valid
        */
-      onComplete () {
+      onComplete() {
 
       },
 
@@ -45,7 +43,6 @@ class Tree {
     };
 
     this.render();
-
   }
 
   /**
@@ -53,8 +50,7 @@ class Tree {
    * @param  {Object} config TODO: see documentation
    * @return {Object}        New config
    */
-  _mapSteps (config) {
-
+  _mapSteps(config) {
     // FIXME: originally did this in a way which didn't mutate config
     // but changed that to reduce dependencies
 
@@ -197,7 +193,7 @@ class Tree {
     let ret;
 
     // TODO: break on finding step
-    util.mapEachStep(this.config, function(step, branch) {
+    util.mapEachStep(this.config, function(step, count, branch) {
       if (step.uniqueId === uniqueId) {
         ret = step;
       }
@@ -216,7 +212,7 @@ class Tree {
     }
 
     try {
-      util.mapEachStep(this.config, function(step, branch) {
+      util.mapEachStep(this.config, function(step, count, branch) {
 
         // Have we found the current step
         if (step.uniqueId === currentStepUniqueId) {
@@ -230,7 +226,7 @@ class Tree {
           if (nextNode.type === 'step') {
             nextStepUniqueId = nextNode.uniqueId;
           } else if (nextNode.type === 'fork') {
-            
+
             // If next node is a fork, get the first step of the next branch
             nextStepUniqueId = nextNode.branches[nextNode.getNextBranch( {tree: this} )][0].uniqueId;
           }
@@ -246,7 +242,7 @@ class Tree {
 
   }
 
-  getTreeState () {
+  getTreeState() {
     return this._treeState;
   }
 

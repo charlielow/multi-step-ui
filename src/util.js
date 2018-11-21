@@ -1,52 +1,56 @@
-// TODO: modularize, unit test
 const util = {
 
   /**
    * Run some code on each step in the tree
    * @param  {Array}   config   Tree.config
-   * @param  {Function} callback recieves current Step and current Branch
+   * @param  {Function} callback recieves current Step,
+   * count (not index in branch, but count) and current Branch
    * @return {undefined}
    */
-  mapEachStep: function(config, callback) {
-    const _mapEachStep = function (branch) {
-      branch.forEach(function(n) {
+  mapEachStep(config, callback) {
+    if (!config || !callback) {
+      throw new Error('Missing required parameter');
+    }
+    let count = 0;
+    const _mapEachStep = (branch) => {
+      branch.forEach((n) => {
         if (n.type === 'step') {
-          callback(n, branch);
+          callback(n, count, branch);
+          count += 1;
         } else if (n.type === 'fork') {
-          Object.entries(n.branches).forEach(function ([key, val]) {
+          Object.entries(n.branches).forEach(([key, val]) => {
             _mapEachStep(val);
           });
         }
-      })
-    }
+      });
+    };
     _mapEachStep(config);
+    return config;
   },
 
   /**
-   * Return index of n in branch
+   * Return index of step in branch
+   * replacement for _.indexOf()
    * @param  {Array} branch
    * @param  {Object} n Step
    * @return {Number}
    */
-  indexOfStepInBranch: function(branch, step) {
-    var ret = 0;
+  indexOfStepInBranch(branch, step) {
+    let ret = 0;
     try {
-      branch.forEach(function(n, i) {
+      branch.forEach((n, i) => {
         ret = i;
         if (n.uniqueId === step.uniqueId) {
-          throw 'break';
+          throw new Error('break');
         }
       });
     } catch (err) {
-      if (err !== 'break') {
+      if (err.message !== 'break') {
         throw err;
       }
     }
     return ret;
-
   }
 };
 
-export {
-  util
-}
+export default util;

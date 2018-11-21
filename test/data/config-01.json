@@ -1,0 +1,51 @@
+[
+  {
+    "type": "step",
+    "id": "step"
+  },
+  {
+    "type": "step",
+    "id": "step"
+  },
+  {
+    "type": "fork",
+    "id": "fork",
+    "branches": {
+      "branchA": [
+        {
+          "type": "step",
+          "id": "step"
+        }
+      ],
+      "branchB": [
+        {
+          "type": "step",
+          "id": "step"
+        },
+        {
+          "type": "step",
+          "id": "step"
+        },
+        {
+          "type": "fork",
+          "id": "fork",
+          "branches": {
+            "branchC": [
+              {
+                "type": "step",
+                "id": "step"
+              }
+            ],
+            "branchD": [
+              {
+                "type": "step",
+                "id": "step"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+
+]

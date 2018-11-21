@@ -23350,7 +23350,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.multiStepUi = exports.Tree = void 0;
 
-var _util = require("./util");
+var _util = _interopRequireDefault(require("./util"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -23374,9 +23376,9 @@ function () {
 
     // Mix props into this
     Object.assign(this, {
-      ////////////////////////////
+      // //////////////////////////
       // Supported config props //
-      ////////////////////////////
+      // //////////////////////////
 
       /*
         Required
@@ -23554,7 +23556,7 @@ function () {
     value: function getStepByUniqueId(uniqueId) {
       var ret; // TODO: break on finding step
 
-      _util.util.mapEachStep(this.config, function (step, branch) {
+      _util.default.mapEachStep(this.config, function (step, count, branch) {
         if (step.uniqueId === uniqueId) {
           ret = step;
         }
@@ -23572,10 +23574,10 @@ function () {
       }
 
       try {
-        _util.util.mapEachStep(this.config, function (step, branch) {
+        _util.default.mapEachStep(this.config, function (step, count, branch) {
           // Have we found the current step
           if (step.uniqueId === currentStepUniqueId) {
-            var nextNode = branch[_util.util.indexOfStepInBranch(branch, step) + 1];
+            var nextNode = branch[_util.default.indexOfStepInBranch(branch, step) + 1];
 
             if (!nextNode) {
               nextStepUniqueId = null;
@@ -23625,7 +23627,7 @@ exports.multiStepUi = multiStepUi;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.util = void 0;
+exports.default = void 0;
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -23635,19 +23637,26 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-// TODO: modularize, unit test
 var util = {
   /**
    * Run some code on each step in the tree
    * @param  {Array}   config   Tree.config
-   * @param  {Function} callback recieves current Step and current Branch
+   * @param  {Function} callback recieves current Step,
+   * count (not index in branch, but count) and current Branch
    * @return {undefined}
    */
   mapEachStep: function mapEachStep(config, callback) {
+    if (!config || !callback) {
+      throw new Error('Missing required parameter');
+    }
+
+    var count = 0;
+
     var _mapEachStep = function _mapEachStep(branch) {
       branch.forEach(function (n) {
         if (n.type === 'step') {
-          callback(n, branch);
+          callback(n, count, branch);
+          count += 1;
         } else if (n.type === 'fork') {
           Object.entries(n.branches).forEach(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 2),
@@ -23661,10 +23670,13 @@ var util = {
     };
 
     _mapEachStep(config);
+
+    return config;
   },
 
   /**
-   * Return index of n in branch
+   * Return index of step in branch
+   * replacement for _.indexOf()
    * @param  {Array} branch
    * @param  {Object} n Step
    * @return {Number}
@@ -23677,11 +23689,11 @@ var util = {
         ret = i;
 
         if (n.uniqueId === step.uniqueId) {
-          throw 'break';
+          throw new Error('break');
         }
       });
     } catch (err) {
-      if (err !== 'break') {
+      if (err.message !== 'break') {
         throw err;
       }
     }
@@ -23689,6 +23701,7 @@ var util = {
     return ret;
   }
 };
-exports.util = util;
+var _default = util;
+exports.default = _default;
 
 },{}]},{},[12]);
