@@ -1,11 +1,9 @@
 [
   {
-    "type": "step",
     "id": "createAccount",
     "heading": "Create your account."
   },
   {
-    "type": "step",
     "id": "stepTwo",
     "heading": "What would you like to do?"
   },
@@ -15,13 +13,11 @@
     "branches": {
       "buyer": [
         {
-          "type": "step",
           "id": "congratsBuyer"
         }
       ],
       "seller": [
         {
-          "type": "step",
           "id": "congratsSeller"
         }
       ]

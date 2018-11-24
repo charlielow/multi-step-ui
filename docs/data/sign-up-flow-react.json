@@ -1,22 +1,17 @@
 [
   {
-    "type": "step",
     "id": "createAccount"
   },
   {
-    "type": "step",
     "id": "profileBasic"
   },
   {
-    "type": "step",
     "id": "profilePhoto"
   },
   {
-    "type": "step",
     "id": "profileAddress"
   },
   {
-    "type": "step",
     "id": "primaryObjective"
   },
   {
@@ -25,7 +20,6 @@
     "branches": {
       "buyer": [
         {
-          "type": "step",
           "id": "subscribe"
         },
         {
@@ -34,7 +28,6 @@
           "branches": {
             "free": [
               {
-                "type": "step",
                 "id": "upsellTShirt"
               },
               {
@@ -43,22 +36,17 @@
                 "branches": {
                   "willBuyTshirt": [
                     {
-                      "type": "step",
                       "id": "profileCreditCard"
                     },
                     {
-                      "type": "step",
                       "id": "reviewCart"
                     },
                     {
-                      "type": "step",
-                      "leaf": "true",
                       "id": "congrats"
                     }
                   ],
                   "willNotBuyTshirt": [
                     {
-                      "type": "step",
                       "id": "congrats"
                     }
                   ]
@@ -67,11 +55,9 @@
             ],
             "paid": [
               {
-                "type": "step",
                 "id": "profileCreditCard"
               },
               {
-                "type": "step",
                 "id": "upsellTShirt"
               },
               {
@@ -80,17 +66,14 @@
                 "branches": {
                   "willBuyTshirt": [
                     {
-                      "type": "step",
                       "id": "reviewCart"
                     },
                     {
-                      "type": "step",
                       "id": "congrats"
                     }
                   ],
                   "willNotBuyTshirt": [
                     {
-                      "type": "step",
                       "id": "congrats"
                     }
                   ]
@@ -102,15 +85,12 @@
       ],
       "seller": [
         {
-          "type": "step",
           "id": "profileBankInfo"
         },
         {
-          "type": "step",
           "id": "addInventory"
         },
         {
-          "type": "step",
           "id": "upsellTShirt"
         },
         {
@@ -119,21 +99,17 @@
           "branches": {
             "tShirtUpsellAlreadyPaid": [
               {
-                "type": "step",
                 "id": "profileCreditCard"
               },
               {
-                "type": "step",
                 "id": "reviewCart"
               },
               {
-                "type": "step",
                 "id": "congrats"
               }
             ],
             "willNotBuyTshirt": [
               {
-                "type": "step",
                 "id": "congrats"
               }
             ]

@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 
 class Debug extends React.Component {
   render () {
+    // let tree = this.props.tree;
     let tree = {
       store: this.props.tree.store,
       _treeState: this.props.tree._treeState

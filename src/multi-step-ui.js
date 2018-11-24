@@ -1,5 +1,8 @@
 import util from './util';
 
+// FIXME: this is increasing the package size by 44KB! wtf, can't seem to get rid of it, need to reduce size
+import cloneDeep from 'lodash.clonedeep';
+
 class Tree {
   constructor(props) {
     // Mix props into this
@@ -34,7 +37,7 @@ class Tree {
     }, props);
 
     // Overwrite config, add unique ID etc.
-    this._mapSteps(this.config);
+    this.config = this._mapSteps(cloneDeep(this.config));
 
     // Tree maintains simple state, data store maintained separately
     this._treeState = {
@@ -51,9 +54,6 @@ class Tree {
    * @return {Object}        New config
    */
   _mapSteps(config) {
-    // FIXME: originally did this in a way which didn't mutate config
-    // but changed that to reduce dependencies
-
     // FIXME: how can I make this whole thing more pure?
     var count = 1;
 
@@ -61,59 +61,80 @@ class Tree {
 
       let len = branch.length;
 
-      branch.forEach(function(n, i) {
-        if (n.type === 'step') {
-
-          // Mix in imported step if available
-          let step = {};
+      branch.forEach(function(n, i, list) {
+        if (n.type === 'fork') {
+          let fork;
           try {
-            step = this.steps[n.id];
+            fork = cloneDeep(this.forks[n.id]);
           } catch (err) { /* do nothing */ }
+          fork = fork || {};
 
-          Object.assign(n, {
-            uniqueId: n.id + count,
+          Object.assign(fork, n);
 
-            // FIXME: temp placeholder
-            renderStep: function () {
+          if (!fork.getNextBranch) {
+            throw new Error('Fork missing required method: getNextBranch');
+          }
 
-              return `${(this.leaf === true) ? 'LEAF!' : 'STEP' } <b>${this.id}</b>`;
+          Object.entries(fork.branches).forEach(function ([key, val]) {
+            mapEachStep(val);
+          });
 
-            },
+          list[i] = fork;
+        } else {
 
-            // Default steps to having no validation rules
-            isValid: function () {
-              return true;
-            }
+          // Assume anything other than type: fork is type: step
 
-          }, step);
+          // TODO: ensure n.id
+
+          /**
+           * The loaded step needs to retain
+           * prototype chain and trump all default properties
+           * everything needs to be copied back to n, can't use object.assign
+           *
+           * prototype chain to support custom step classes incoming
+           */
+
+          // Import step if available
+          let step;
+          try {
+            
+            // Must deep clone to preserve prototype chain and all nested branches etc.
+            // and so steps that share logic will be copied and thus have unique ID
+            step = cloneDeep(this.steps[n.id]);
+          } catch (err) { /* do nothing */ }
+          step = step || {};
+
+          // Step needs to be the destination so it can retain
+          // its prototype chain, n is just a plain JSON config
+          Object.assign(step, n);
+
+          step.type = 'step';
+          step.uniqueId = step.id + count;
 
           // If the current step is the last item in its branch
           // then it is a leaf
           if (i === len - 1) {
-            n.isLeaf = true;
+            step.isLeaf = true;
           }
+
+          if (typeof step.isValid !== 'function') {
+            step.isValid = function () {
+              return true;
+            };
+          }
+
+          if (typeof step.renderStep !== 'function') {
+            step.renderStep = function () {
+              
+              // TODO: remove/change
+              return 'TEMPORARY PLACEHOLDER DEFAULT STEP renderStep()';
+            };
+          }
+
+          // FIXME: maybe?, I don't like how this force overwrites
+          list[i] = step;
 
           count ++ ;
-        } else if (n.type === 'fork') {
-
-          let fork = {};
-          try {
-            fork = this.forks[n.id];
-          } catch (err) { /* do nothing */ }
-
-          // Mix in imported fork
-          Object.assign(n, {
-
-            // No default properties or methods for now
-          }, fork);
-
-          if (!n.getNextBranch) {
-            throw new Error('Fork missing required method: getNextBranch');
-          }
-
-          Object.entries(n.branches).forEach(function ([key, val]) {
-            mapEachStep(val);
-          });
         }
       }, this)
 

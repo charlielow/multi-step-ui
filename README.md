@@ -48,11 +48,9 @@ import { multiStepUi } from 'multi-step-ui';
 
 const config = [
   {
-    "type": "step",
     "id": "stepOne"
   },
   {
-    "type": "step",
     "id": "stepTwo"
   },
   {
@@ -61,13 +59,11 @@ const config = [
     "branches": {
       "branchA": [
         {
-          "type": "step",
           "id": "congratsBranchA"
         }
       ],
       "branchB": [
         {
-          "type": "step",
           "id": "congratsSranchB"
         }
       ]

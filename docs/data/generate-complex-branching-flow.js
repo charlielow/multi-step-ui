@@ -36,7 +36,6 @@ const createBranch = function() {
 };
 
 let aStep = {
-  type: 'step',
   id: 'step'
 }
 
