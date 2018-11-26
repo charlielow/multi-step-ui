@@ -18,7 +18,7 @@ const createBranch = function() {
   for (var i = 1; i <= howManySteps; i++) {
     ret.push(Object.assign({}, aStep));
   }
-  if (forksCount <= maxForks) {
+  if (maxForks !== 0 && forksCount <= maxForks) {
     let fork = Object.assign({}, aFork);
     fork.getNextBranch = spinTheBottle.getNextBranch;
     ret.push(fork);
