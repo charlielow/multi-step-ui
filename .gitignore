@@ -19,9 +19,6 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
-# nyc test coverage
-.nyc_output
-
 # Bower dependency directory (https://bower.io/)
 bower_components
 
@@ -46,9 +43,3 @@ jspm_packages/
 
 # dotenv environment variables file
 .env
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
