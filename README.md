@@ -2,6 +2,8 @@
 
 ___WARNING__  this project is currently in pre-release beta, under development and subject to change_
 
+[![Build Status](https://travis-ci.com/charlielow/multi-step-ui.svg?branch=master)](https://travis-ci.com/charlielow/multi-step-ui) [![npm](https://img.shields.io/npm/v/multi-step-ui.svg)](https://github.com/charlielow/multi-step-ui)
+
 ### What it is
 
 A lightweight framework for __managing a multi-step user flow__ providing step mapping and navigation through nested branches and a simple, extensible interface for Steps and Forks
@@ -10,8 +12,6 @@ A lightweight framework for __managing a multi-step user flow__ providing step m
 * Help / FAQ triage flow
 * Troubleshooting guide
 * Choose Your Own Adventure
-
-[![Build Status](https://travis-ci.com/charlielow/multi-step-ui.svg?branch=master)](https://travis-ci.com/charlielow/multi-step-ui)
 
 __Example pages__
 
