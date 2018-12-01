@@ -3,7 +3,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const babel = require('gulp-babel');
 const bro = require('gulp-bro');
 const babelify = require('babelify');
-const livereload = require('gulp-livereload');
+// const livereload = require('gulp-livereload');
 const sass = require('gulp-sass');
 sass.compiler = require('node-sass');
 
@@ -36,7 +36,8 @@ gulp.task('sass', () => {
   return gulp.src(docsSassSrc)
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(docsCssDest))
-    .pipe(livereload());
+    // FIXME: vulnerability
+    // .pipe(livereload());
 });
 
 // gulp.task('transpileJs', () =>
@@ -47,7 +48,8 @@ gulp.task('sass', () => {
 //     }))
 //     .pipe(sourcemaps.write('.'))
 //     .pipe(gulp.dest('docs/js/dest'))
-//     // .pipe(livereload());
+// FIXME: vulnerability
+// //     // .pipe(livereload());
 // );
 
 // Remove coverage, docs/**/dest/*
