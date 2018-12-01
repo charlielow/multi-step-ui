@@ -11,7 +11,7 @@ A lightweight framework for __managing a multi-step user flow__ providing step m
 * Troubleshooting guide
 * Choose Your Own Adventure
 
-
+[![Build Status](https://travis-ci.com/charlielow/multi-step-ui.svg?branch=master)](https://travis-ci.com/charlielow/multi-step-ui)
 
 __Example pages__
 

@@ -69,6 +69,7 @@ gulp.task('watch:js', () => {
 });
 
 gulp.task('watch:sass', () => {
-  livereload.listen();
+  // FIXME: vulnerability
+  // livereload.listen();
   return gulp.watch([docsSassSrc], ['sass']);
 });
