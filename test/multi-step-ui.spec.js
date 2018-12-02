@@ -116,8 +116,32 @@ describe('Tree', () => {
       });
     });
 
+    test('Should throw if any step is missing `id`', () => {
+      expect(() => {
+        const tree = new Tree({
+          config: [
+            {
+              id: 'step'
+            },
+            {}
+          ],
+          steps: {},
+          forks: {
+            fork: {
+              getNextBranch: () => {}
+            }
+          },
+          render: () => {}
+        });
+      }).toThrow(/id/);
+    });
+
     test('Should correctly map nested steps', () => {
       expect(t.config[2].branches.branchA[0].uniqueId).toBe('step3');
+    });
+
+    test('Should preserve arbitrary step config attributes', () => {
+      expect(t.config[1].title).toBe('Step Two');
     });
 
     test('Should correctly map all steps to type `step`', () => {

@@ -3,7 +3,8 @@
     "id": "step"
   },
   {
-    "id": "step"
+    "id": "step",
+    "title": "Step Two"
   },
   {
     "type": "fork",

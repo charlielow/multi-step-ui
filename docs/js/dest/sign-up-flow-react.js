@@ -25105,8 +25105,6 @@ function () {
   function Tree(props) {
     _classCallCheck(this, Tree);
 
-    // TODO: error testing
-    // required: config
     if (!props.config) {
       throw new Error('Missing required prop: config');
     }
@@ -25129,27 +25127,29 @@ function () {
       /**
        * Tree render method is required and provided at configuration
        * Tree render should render whatever layout plus the output of
-       * calling render on the current step
+       * calling `render()` on the current step
        */
       render: function render() {},
 
       /**
-       * Optionally proved an onComplete handler at configuration
-       * will be called when the final step (Leaf) is valid
+       * Optionally provive an `onComplete()` handler at configuration
+       * which will be called when the final step (Leaf) is valid
        */
       onComplete: function onComplete() {}
-    }, props); // Overwrite config, add unique ID etc.
+    }, props); // Overwrite `this.config`, add unique ID etc.
 
-    this.config = this._mapSteps((0, _lodash.default)(this.config)); // Tree maintains simple state, data store maintained separately
+    this.config = this._mapSteps((0, _lodash.default)(this.config)); // Tree maintains simple navigation state
+    // maintaining your own application state separately is recommended
 
     this._treeState = {
       currentStepUniqueId: this.config[0].uniqueId,
-      history: []
+      history: [],
+      isFastForwarding: false
     };
     this.render();
   }
   /**
-   * Enhance config, make it functional
+   * Enhance config, add functionality
    *
    * This is where config is matched against
    * the maps for steps and forks (props.steps and props.forks)
@@ -25167,10 +25167,6 @@ function () {
       var _this = this;
 
       var count = 1;
-      var log = {
-        stepsWithoutIsValid: 0,
-        stepsWithoutRenderStep: 0
-      };
 
       var mapEachStep = function mapEachStep(branch) {
         var len = branch.length;
@@ -25204,16 +25200,19 @@ function () {
             list[i] = fork;
           } else {
             // Assume anything other than type: fork is type: step
-            // TODO: ensure n.id
-
+            if (!n.id) {
+              throw new Error('Step missing required property: id');
+            }
             /**
              * The loaded step needs to retain
              * prototype chain and trump all default properties
              * everything needs to be copied back to n, can't use object.assign
              *
-             * prototype chain to support custom step classes incoming
+             * prototype chain is required to support custom step classes incoming
              */
             // Import step if available
+
+
             var step;
 
             try {
@@ -25243,17 +25242,11 @@ function () {
               step.isValid = function () {
                 return true;
               };
+            } // Allow for empty `step.renderStep()`
 
-              log.stepsWithoutIsValid += 1;
-            }
 
             if (typeof step.renderStep !== 'function') {
-              step.renderStep = function () {
-                // TODO: remove/change
-                return 'TEMPORARY PLACEHOLDER DEFAULT STEP renderStep()';
-              };
-
-              log.stepsWithoutRenderStep += 1;
+              step.renderStep = function () {};
             }
 
             list[i] = step;
@@ -25262,11 +25255,7 @@ function () {
         }, _this);
       };
 
-      mapEachStep(config); // TODO: hide logging behind a config prop
-      // if (log.stepsWithoutIsValid || log.stepsWithoutRenderStep) {
-      //   console.log(log);
-      // }
-
+      mapEachStep(config);
       return config;
     } // ///////////////////////////
     // Navigation ////////////////
@@ -25280,17 +25269,11 @@ function () {
   }, {
     key: "stepForward",
     value: function stepForward() {
+      var isFastForwarding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var currentStepUniqueId = this._treeState.currentStepUniqueId;
-      var nextStepUniqueId = null; // Don't step forward unless current step is valid
-      //
-      // TODO: support passing a flag while fast forwarding
-      // to suppress errors while validating
-      // ```
-      // stepForward(fastForwarding = false)
-      // this.fastForwarding = fastForwarding;
-      // ...isValid({ tree: this })
-      // this.fastForwarding = false; or delete this.fastForwarding;
-      // ```
+      var nextStepUniqueId = null; // if isFastForwarding, a step may choose to suppress validation errors
+
+      this._treeState.isFastForwarding = isFastForwarding; // Don't step forward unless current step is valid
 
       if (!this.getStepByUniqueId(currentStepUniqueId).isValid({
         tree: this
@@ -25298,11 +25281,10 @@ function () {
         return '';
       }
 
+      this._treeState.isFastForwarding = false;
       nextStepUniqueId = this.getNextStepUniqueId(currentStepUniqueId);
 
       if (nextStepUniqueId) {
-        // TODO: valid? test to make sure this actually works, will we
-        // ever not have a currentStepUniqueId? should support it I think.
         if (this._treeState.currentStepUniqueId) {
           this._treeState.history.push(this._treeState.currentStepUniqueId);
         }
@@ -25341,8 +25323,6 @@ function () {
      * @param {String} toStep Step ID to stop on, if omitted keep going as far as possible
      *
      * IMPORTANT: toStep should be step.id NOT step.uniqueId
-     *
-     * TODO: suppress errors on final step
      */
 
   }, {
@@ -25354,7 +25334,7 @@ function () {
         return !toStep || _this2.getStepByUniqueId(_this2._treeState.currentStepUniqueId).id !== toStep;
       };
 
-      while (keepGoing.call(this) && this.stepForward()) {
+      while (keepGoing.call(this) && this.stepForward(true)) {
         ;
       }
     }
