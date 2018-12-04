@@ -90,7 +90,7 @@ function (_React$Component) {
 var _default = Debug;
 exports.default = _default;
 
-},{"react":20,"react-dom":17}],3:[function(require,module,exports){
+},{"react":21,"react-dom":18}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -176,7 +176,38 @@ function (_React$Component) {
 var _default = Tree;
 exports.default = _default;
 
-},{"react":20,"react-dom":17}],4:[function(require,module,exports){
+},{"react":21,"react-dom":18}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.plugins = void 0;
+var plugins = {
+  router: {
+    init: function init() {
+      console.log('init router: ' + this.getTreeState().currentStepUniqueId);
+    },
+    render: function render() {
+      console.log('render router: ' + this.getTreeState().currentStepUniqueId);
+    },
+    onStep: function onStep(stepUniqueId) {
+      console.log('onStep router: ' + stepUniqueId + ' : ' + this.getTreeState().currentStepUniqueId);
+    },
+    onComplete: function onComplete() {
+      console.log('onComplete router : ' + this.getTreeState().currentStepUniqueId);
+    }
+  },
+  somethingElse: {
+    init: function init() {
+      console.log('init somethingElse: ' + this.getTreeState().currentStepUniqueId);
+    }
+  },
+  anEmptyOne: {}
+};
+exports.plugins = plugins;
+
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -286,7 +317,7 @@ function (_React$Component) {
 
 exports.CreateAccount = CreateAccount;
 
-},{"react":20}],5:[function(require,module,exports){
+},{"react":21}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -377,7 +408,7 @@ function (_React$Component) {
 
 exports.StepTwo = StepTwo;
 
-},{"react":20}],6:[function(require,module,exports){
+},{"react":21}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -394,7 +425,7 @@ var forks = {
 };
 exports.forks = forks;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -642,7 +673,7 @@ var render = function render() {
 
 exports.render = render;
 
-},{"../components/Debug":2,"../components/Tree":3,"react":20,"react-dom":17}],8:[function(require,module,exports){
+},{"../components/Debug":2,"../components/Tree":3,"react":21,"react-dom":18}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -725,7 +756,7 @@ var steps = {
 };
 exports.steps = steps;
 
-},{"./components/CreateAccount":4,"./components/StepTwo":5}],9:[function(require,module,exports){
+},{"./components/CreateAccount":5,"./components/StepTwo":6}],10:[function(require,module,exports){
 "use strict";
 
 var _multiStepUi = require("../../../src/multi-step-ui");
@@ -736,6 +767,8 @@ var _forks = require("./import/simple-flow-react/forks");
 
 var _render = require("./import/simple-flow-react/render");
 
+var _dummy = require("./import/plugins/dummy");
+
 // Import config, steps, forks and render for this example page
 var config = require('../../data/simple-flow-react.json');
 
@@ -745,11 +778,16 @@ var msuFlow = (0, _multiStepUi.multiStepUi)({
   steps: _steps.steps,
   forks: _forks.forks,
   render: _render.render,
+  plugins: _dummy.plugins,
+  // deepLinkStepUniqueId: 'stepTwo2',
   store: {
     name: 'Bob Smith',
     email: 'bob.smith@email.com',
     password: 'password',
     memberType: 'buyer'
+  },
+  onStep: function onStep() {
+    console.log(JSON.stringify(this.getTreeState()));
   },
   onComplete: function onComplete() {
     console.log('Complete!');
@@ -760,7 +798,7 @@ window.msuFlow = msuFlow; // TODO: remove
 // msuFlow.stepForward();
 // msuFlow.fastForward('stepTwo');
 
-},{"../../../src/multi-step-ui":27,"../../data/simple-flow-react.json":1,"./import/simple-flow-react/forks":6,"./import/simple-flow-react/render":7,"./import/simple-flow-react/steps":8}],10:[function(require,module,exports){
+},{"../../../src/multi-step-ui":28,"../../data/simple-flow-react.json":1,"./import/plugins/dummy":4,"./import/simple-flow-react/forks":7,"./import/simple-flow-react/render":8,"./import/simple-flow-react/steps":9}],11:[function(require,module,exports){
 (function (global){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -2512,7 +2550,7 @@ function stubFalse() {
 module.exports = cloneDeep;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -2604,7 +2642,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2790,7 +2828,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -2885,7 +2923,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":14,"_process":12}],14:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":15,"_process":13}],15:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -2899,7 +2937,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.0
  * react-dom.development.js
@@ -21793,7 +21831,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":12,"object-assign":11,"prop-types/checkPropTypes":13,"react":20,"scheduler":25,"scheduler/tracing":26}],16:[function(require,module,exports){
+},{"_process":13,"object-assign":12,"prop-types/checkPropTypes":14,"react":21,"scheduler":26,"scheduler/tracing":27}],17:[function(require,module,exports){
 /** @license React v16.6.0
  * react-dom.production.min.js
  *
@@ -22045,7 +22083,7 @@ void 0:r("40");return a._reactRootContainer?(Ji(function(){Wi(null,null,a,!1,fun
 Pa,Qa,Ga.injectEventPluginsByName,sa,Wa,function(a){Ba(a,Va)},Wb,Xb,ee,Ia]},unstable_createRoot:function(a,b){Ui(a)?void 0:r("278");return new Ti(a,!0,null!=b&&!0===b.hydrate)}};(function(a){var b=a.findFiberByHostInstance;return Cf(n({},a,{findHostInstanceByFiber:function(a){a=Jd(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null}}))})({findFiberByHostInstance:Na,bundleType:0,version:"16.6.0",rendererPackageName:"react-dom"});
 var mj={default:Yi},nj=mj&&Yi||mj;module.exports=nj.default||nj;
 
-},{"object-assign":11,"react":20,"scheduler":25}],17:[function(require,module,exports){
+},{"object-assign":12,"react":21,"scheduler":26}],18:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -22087,7 +22125,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":15,"./cjs/react-dom.production.min.js":16,"_process":12}],18:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":16,"./cjs/react-dom.production.min.js":17,"_process":13}],19:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.0
  * react.development.js
@@ -23831,7 +23869,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":12,"object-assign":11,"prop-types/checkPropTypes":13}],19:[function(require,module,exports){
+},{"_process":13,"object-assign":12,"prop-types/checkPropTypes":14}],20:[function(require,module,exports){
 /** @license React v16.6.0
  * react.production.min.js
  *
@@ -23857,7 +23895,7 @@ _currentValue:a,_currentValue2:a,Provider:null,Consumer:null};a.Provider={$$type
 g=a.key,h=a.ref,f=a._owner;if(null!=b){void 0!==b.ref&&(h=b.ref,f=K.current);void 0!==b.key&&(g=""+b.key);var l=void 0;a.type&&a.type.defaultProps&&(l=a.type.defaultProps);for(c in b)L.call(b,c)&&!M.hasOwnProperty(c)&&(d[c]=void 0===b[c]&&void 0!==l?l[c]:b[c])}c=arguments.length-2;if(1===c)d.children=e;else if(1<c){l=Array(c);for(var m=0;m<c;m++)l[m]=arguments[m+2];d.children=l}return{$$typeof:p,type:a.type,key:g,ref:h,props:d,_owner:f}},createFactory:function(a){var b=N.bind(null,a);b.type=a;return b},
 isValidElement:O,version:"16.6.0",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:K,assign:k}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":11}],20:[function(require,module,exports){
+},{"object-assign":12}],21:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -23868,7 +23906,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":18,"./cjs/react.production.min.js":19,"_process":12}],21:[function(require,module,exports){
+},{"./cjs/react.development.js":19,"./cjs/react.production.min.js":20,"_process":13}],22:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.0
  * scheduler-tracing.development.js
@@ -24288,7 +24326,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":12}],22:[function(require,module,exports){
+},{"_process":13}],23:[function(require,module,exports){
 /** @license React v16.6.0
  * scheduler-tracing.production.min.js
  *
@@ -24300,7 +24338,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.0
  * scheduler.development.js
@@ -24958,7 +24996,7 @@ exports.unstable_getCurrentPriorityLevel = unstable_getCurrentPriorityLevel;
 }
 
 }).call(this,require('_process'))
-},{"_process":12}],24:[function(require,module,exports){
+},{"_process":13}],25:[function(require,module,exports){
 /** @license React v16.6.0
  * scheduler.production.min.js
  *
@@ -24979,7 +25017,7 @@ exports.unstable_UserBlockingPriority=2;exports.unstable_NormalPriority=3;export
 exports.unstable_scheduleCallback=function(a,b){var d=-1!==h?h:exports.unstable_now();if("object"===typeof b&&null!==b&&"number"===typeof b.timeout)b=d+b.timeout;else switch(f){case 1:b=d+-1;break;case 2:b=d+250;break;case 4:b=d+1073741823;break;default:b=d+5E3}a={callback:a,priorityLevel:f,expirationTime:b,next:null,previous:null};if(null===c)c=a.next=a.previous=a,r();else{d=null;var e=c;do{if(e.expirationTime>b){d=e;break}e=e.next}while(e!==c);null===d?d=c:d===c&&(c=a,r());b=d.previous;b.next=d.previous=
 a;a.next=d;a.previous=b}return a};exports.unstable_cancelCallback=function(a){var b=a.next;if(null!==b){if(b===a)c=null;else{a===c&&(c=b);var d=a.previous;d.next=b;b.previous=d}a.next=a.previous=null}};exports.unstable_wrapCallback=function(a){var b=f;return function(){var d=f,e=h;f=b;h=exports.unstable_now();try{return a.apply(this,arguments)}finally{f=d,h=e,x()}}};exports.unstable_getCurrentPriorityLevel=function(){return f};
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -24990,7 +25028,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":23,"./cjs/scheduler.production.min.js":24,"_process":12}],26:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":24,"./cjs/scheduler.production.min.js":25,"_process":13}],27:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -25001,7 +25039,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":21,"./cjs/scheduler-tracing.production.min.js":22,"_process":12}],27:[function(require,module,exports){
+},{"./cjs/scheduler-tracing.development.js":22,"./cjs/scheduler-tracing.production.min.js":23,"_process":13}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25050,7 +25088,7 @@ function () {
       // //////////////////////////
 
       /*
-        Required
+       * Required
        */
       config: [],
 
@@ -25061,22 +25099,72 @@ function () {
        */
       render: function render() {},
 
+      /*
+       * Optional
+       */
+
+      /**
+       * Used `deepLinkStepId` to deep link or seed initial step
+       */
+      deepLinkStepId: '',
+
+      /**
+       * `deepLinkStepUniqueId` is mostly used to fastForward to previous
+       * step on page reload internally used to find deepLinkStepId
+       */
+      deepLinkStepUniqueId: '',
+
+      /**
+       * Plugins are objects which implement
+       * any or all of the following methods
+       *
+       * init()
+       * render()
+       * onStep()
+       * onComplete()
+       *
+       * Methods will be called in the context of the tree instance
+       * so best to not use arrow functions which don't have `this`
+       *
+       * Use plugins to add additional functionality such as routing or logging
+       *
+       * Example:
+       *
+       * plugins = {
+       *   aPlugin: {
+       *     init: function() {
+       *       console.log(this); // > Tree
+       *     }
+       *   }
+       * }
+       */
+      plugins: {},
+
+      /**
+       * Called on step change, forward and back
+       *
+       * @param {String} stepUniqueId
+       */
+      onStep: function onStep(stepUniqueId) {},
+
       /**
        * Optionally provive an `onComplete()` handler at configuration
        * which will be called when the final step (Leaf) is valid
        */
       onComplete: function onComplete() {}
-    }, props); // Overwrite `this.config`, add unique ID etc.
+    }, props); // Overwrite `this.config` (from `props.config`), add unique ID etc.
 
     this.config = this._mapSteps((0, _lodash.default)(this.config)); // Tree maintains simple navigation state
     // maintaining your own application state separately is recommended
 
-    this._treeState = {
-      currentStepUniqueId: this.config[0].uniqueId,
-      history: [],
-      isFastForwarding: false
-    };
-    this.render();
+    this.resetTreeState(); // If we have an deepLinkStepUniqueId or deepLinkStepId
+    // fast forward to it, used for
+
+    this._deepLink();
+
+    this._initPlugins();
+
+    this._render();
   }
   /**
    * Enhance config, add functionality
@@ -25193,6 +25281,9 @@ function () {
 
     /**
      * Step _treeState forward by one
+     *
+     * @param {Boolean} isFastForwarding
+     *
      * @return {String} Next step uniqueId
      */
 
@@ -25220,10 +25311,16 @@ function () {
         }
 
         this._treeState.currentStepUniqueId = nextStepUniqueId;
-        this.render();
+
+        if (!isFastForwarding) {
+          this._onStep(this._treeState.currentStepUniqueId);
+
+          this._render();
+        }
       } else {
         // No next step means we're at the end of the line
-        this.onComplete();
+        this._onComplete();
+
         return '';
       }
 
@@ -25237,6 +25334,8 @@ function () {
   }, {
     key: "stepBack",
     value: function stepBack() {
+      var isRewinding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       var lastHistoryItem = this._treeState.history.pop();
 
       if (!lastHistoryItem) {
@@ -25244,36 +25343,71 @@ function () {
       }
 
       this._treeState.currentStepUniqueId = lastHistoryItem;
-      this.render();
+
+      if (!isRewinding) {
+        this._onStep(this._treeState.currentStepUniqueId);
+
+        this._render();
+      }
+
       return lastHistoryItem;
     }
     /**
      * Move forward until you can't anymore
      *
-     * @param {String} toStep Step ID to stop on, if omitted keep going as far as possible
+     * @param {String} toStepId Step ID to stop on, if omitted keep going as far as possible
      *
-     * IMPORTANT: toStep should be step.id NOT step.uniqueId
+     * IMPORTANT: toStepId should be step.id NOT step.uniqueId
      */
 
   }, {
     key: "fastForward",
-    value: function fastForward(toStep) {
+    value: function fastForward(toStepId) {
       var _this2 = this;
 
       var keepGoing = function keepGoing() {
-        return !toStep || _this2.getStepByUniqueId(_this2._treeState.currentStepUniqueId).id !== toStep;
+        return !toStepId || _this2.getStepByUniqueId(_this2._treeState.currentStepUniqueId).id !== toStepId;
       };
 
       while (keepGoing.call(this) && this.stepForward(true)) {
         ;
       }
+
+      this._onStep(this._treeState.currentStepUniqueId);
+
+      this._render();
     }
     /**
-     * TODO: implement a rewind/start over method
+     * @param {String} toStepId Step ID to stop on, if omitted go to first step
+     *
+     * IMPORTANT: toStepId should be step.id NOT step.uniqueId
      */
-    // rewind(toStep) {
-    // }
-    // ///////////////////////////
+
+  }, {
+    key: "rewind",
+    value: function rewind(toStepId) {
+      var _this3 = this;
+
+      if (!toStepId) {
+        this.resetTreeState();
+
+        this._onStep(this._treeState.currentStepUniqueId);
+
+        this.render();
+      } else {
+        var keepGoing = function keepGoing() {
+          return _this3.getStepByUniqueId(_this3._treeState.currentStepUniqueId).id !== toStepId;
+        };
+
+        while (keepGoing.call(this) && this.stepBack(true)) {
+          ;
+        }
+
+        this._onStep(this._treeState.currentStepUniqueId);
+
+        this.render();
+      }
+    } // ///////////////////////////
     // ///////////////////////////
     // ///////////////////////////
 
@@ -25298,7 +25432,7 @@ function () {
   }, {
     key: "getNextStepUniqueId",
     value: function getNextStepUniqueId(currentStepUniqueId) {
-      var _this3 = this;
+      var _this4 = this;
 
       var nextStepUniqueId;
 
@@ -25322,7 +25456,7 @@ function () {
             } else if (nextNode.type === 'fork') {
               // If next node is a fork, get the first step of the next branch
               nextStepUniqueId = nextNode.branches[nextNode.getNextBranch({
-                tree: _this3
+                tree: _this4
               })][0].uniqueId;
             }
           }
@@ -25340,6 +25474,101 @@ function () {
     value: function getTreeState() {
       return this._treeState;
     }
+  }, {
+    key: "resetTreeState",
+    value: function resetTreeState() {
+      this._treeState = {
+        currentStepUniqueId: this.config[0].uniqueId,
+        history: [],
+        isFastForwarding: false
+      };
+    }
+  }, {
+    key: "_deepLink",
+    value: function _deepLink() {
+      if (this.deepLinkStepUniqueId) {
+        this.fastForward(this.getStepByUniqueId(this.deepLinkStepUniqueId).id);
+      } else if (this.deepLinkStepId) {
+        this.fastForward(this.deepLinkStepId);
+      } else {
+        this._onStep(this._treeState.currentStepUniqueId);
+      }
+    }
+    /**
+     * Plugin Support
+     */
+
+  }, {
+    key: "_initPlugins",
+    value: function _initPlugins() {
+      var _this5 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            key = _ref4[0],
+            val = _ref4[1];
+
+        try {
+          val.init.call(_this5);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+    }
+  }, {
+    key: "_render",
+    value: function _render(stepUniqueId) {
+      var _this6 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 2),
+            key = _ref6[0],
+            val = _ref6[1];
+
+        try {
+          val.render.call(_this6);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+      this.render(stepUniqueId);
+    }
+  }, {
+    key: "_onStep",
+    value: function _onStep(stepUniqueId) {
+      var _this7 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref7) {
+        var _ref8 = _slicedToArray(_ref7, 2),
+            key = _ref8[0],
+            val = _ref8[1];
+
+        try {
+          val.onStep.call(_this7, stepUniqueId);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+      this.onStep(stepUniqueId);
+    }
+  }, {
+    key: "_onComplete",
+    value: function _onComplete() {
+      var _this8 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref9) {
+        var _ref10 = _slicedToArray(_ref9, 2),
+            key = _ref10[0],
+            val = _ref10[1];
+
+        try {
+          val.onComplete.call(_this8);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+      this.onComplete();
+    }
   }]);
 
   return Tree;
@@ -25354,7 +25583,7 @@ var multiStepUi = function multiStepUi(props) {
 
 exports.multiStepUi = multiStepUi;
 
-},{"./util":28,"lodash.clonedeep":10}],28:[function(require,module,exports){
+},{"./util":29,"lodash.clonedeep":11}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25437,4 +25666,4 @@ var util = {
 var _default = util;
 exports.default = _default;
 
-},{}]},{},[9]);
+},{}]},{},[10]);

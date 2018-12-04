@@ -345,6 +345,80 @@ describe('Tree', () => {
       t.fastForward();
       expect(t.getTreeState().currentStepUniqueId).toBe('stepTwo2');
     });
+    test('Should call `_onStep` for the step being fast forwarded to and not others', () => {
+      expect(t.getTreeState().currentStepUniqueId).toBe('createAccount1');
+      t._onStep = jest.fn();
+      t.fastForward('congratsBuyer');
+      expect(t.getTreeState().currentStepUniqueId).toBe('congratsBuyer3');
+      expect(t._onStep).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('rewind', () => {
+    let t;
+
+    beforeEach(() => {
+      class Fork {
+        getNextBranch() {
+          return 'branchA';
+        }
+      }
+
+      t = new Tree({
+        config,
+        forks: {
+          forkOne: {
+            getNextBranch: () => {
+              return 'buyer';
+            },
+          }
+        },
+        render: () => {}
+      });
+    });
+
+    test('Should rewind to the first step if no argument is provided', () => {
+      t.stepForward();
+      t.stepForward();
+      expect(t.getTreeState().currentStepUniqueId).toBe('congratsBuyer3');
+      t.rewind();
+      expect(t.getTreeState().currentStepUniqueId).toBe('createAccount1');
+    });
+    test('Should rewind across forks to `toStepId`', () => {
+      t.stepForward();
+      t.stepForward();
+      expect(t.getTreeState().currentStepUniqueId).toBe('congratsBuyer3');
+      t.rewind('stepTwo');
+      expect(t.getTreeState().currentStepUniqueId).toBe('stepTwo2');
+    });
+    test('Should disregard an invalid `toStep`', () => {
+      t.rewind('foofoolala');
+      expect(t.getTreeState().currentStepUniqueId).toBe('createAccount1');
+    });
+    test('Should call `_onStep` on the rewind step destination', () => {
+      t.stepForward();
+      t.stepForward();
+      expect(t.getTreeState().currentStepUniqueId).toBe('congratsBuyer3');
+      t._onStep = jest.fn();
+      t.rewind('createAccount');
+      expect(t._onStep).toHaveBeenCalledTimes(1);
+    });
+    test('Should call `_onStep` on the rewind step destination when called without argument', () => {
+      t.stepForward();
+      t.stepForward();
+      expect(t.getTreeState().currentStepUniqueId).toBe('congratsBuyer3');
+      t._onStep = jest.fn();
+      t.rewind();
+      expect(t._onStep).toHaveBeenCalledTimes(1);
+    });
+    test('Should rewind correctly after `fastForward()`', () => {
+      t.fastForward('congratsBuyer');
+      expect(t.getTreeState().currentStepUniqueId).toBe('congratsBuyer3');
+      t._onStep = jest.fn();
+      t.rewind('stepTwo');
+      expect(t.getTreeState().currentStepUniqueId).toBe('stepTwo2');
+      expect(t._onStep).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('getStepByUniqueId', () => {

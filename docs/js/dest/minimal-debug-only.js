@@ -1956,7 +1956,7 @@ function () {
       // //////////////////////////
 
       /*
-        Required
+       * Required
        */
       config: [],
 
@@ -1967,22 +1967,72 @@ function () {
        */
       render: function render() {},
 
+      /*
+       * Optional
+       */
+
+      /**
+       * Used `deepLinkStepId` to deep link or seed initial step
+       */
+      deepLinkStepId: '',
+
+      /**
+       * `deepLinkStepUniqueId` is mostly used to fastForward to previous
+       * step on page reload internally used to find deepLinkStepId
+       */
+      deepLinkStepUniqueId: '',
+
+      /**
+       * Plugins are objects which implement
+       * any or all of the following methods
+       *
+       * init()
+       * render()
+       * onStep()
+       * onComplete()
+       *
+       * Methods will be called in the context of the tree instance
+       * so best to not use arrow functions which don't have `this`
+       *
+       * Use plugins to add additional functionality such as routing or logging
+       *
+       * Example:
+       *
+       * plugins = {
+       *   aPlugin: {
+       *     init: function() {
+       *       console.log(this); // > Tree
+       *     }
+       *   }
+       * }
+       */
+      plugins: {},
+
+      /**
+       * Called on step change, forward and back
+       *
+       * @param {String} stepUniqueId
+       */
+      onStep: function onStep(stepUniqueId) {},
+
       /**
        * Optionally provive an `onComplete()` handler at configuration
        * which will be called when the final step (Leaf) is valid
        */
       onComplete: function onComplete() {}
-    }, props); // Overwrite `this.config`, add unique ID etc.
+    }, props); // Overwrite `this.config` (from `props.config`), add unique ID etc.
 
     this.config = this._mapSteps((0, _lodash.default)(this.config)); // Tree maintains simple navigation state
     // maintaining your own application state separately is recommended
 
-    this._treeState = {
-      currentStepUniqueId: this.config[0].uniqueId,
-      history: [],
-      isFastForwarding: false
-    };
-    this.render();
+    this.resetTreeState(); // If we have an deepLinkStepUniqueId or deepLinkStepId
+    // fast forward to it, used for
+
+    this._deepLink();
+
+    this._initPlugins();
+
+    this._render();
   }
   /**
    * Enhance config, add functionality
@@ -2099,6 +2149,9 @@ function () {
 
     /**
      * Step _treeState forward by one
+     *
+     * @param {Boolean} isFastForwarding
+     *
      * @return {String} Next step uniqueId
      */
 
@@ -2126,10 +2179,16 @@ function () {
         }
 
         this._treeState.currentStepUniqueId = nextStepUniqueId;
-        this.render();
+
+        if (!isFastForwarding) {
+          this._onStep(this._treeState.currentStepUniqueId);
+
+          this._render();
+        }
       } else {
         // No next step means we're at the end of the line
-        this.onComplete();
+        this._onComplete();
+
         return '';
       }
 
@@ -2143,6 +2202,8 @@ function () {
   }, {
     key: "stepBack",
     value: function stepBack() {
+      var isRewinding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       var lastHistoryItem = this._treeState.history.pop();
 
       if (!lastHistoryItem) {
@@ -2150,36 +2211,71 @@ function () {
       }
 
       this._treeState.currentStepUniqueId = lastHistoryItem;
-      this.render();
+
+      if (!isRewinding) {
+        this._onStep(this._treeState.currentStepUniqueId);
+
+        this._render();
+      }
+
       return lastHistoryItem;
     }
     /**
      * Move forward until you can't anymore
      *
-     * @param {String} toStep Step ID to stop on, if omitted keep going as far as possible
+     * @param {String} toStepId Step ID to stop on, if omitted keep going as far as possible
      *
-     * IMPORTANT: toStep should be step.id NOT step.uniqueId
+     * IMPORTANT: toStepId should be step.id NOT step.uniqueId
      */
 
   }, {
     key: "fastForward",
-    value: function fastForward(toStep) {
+    value: function fastForward(toStepId) {
       var _this2 = this;
 
       var keepGoing = function keepGoing() {
-        return !toStep || _this2.getStepByUniqueId(_this2._treeState.currentStepUniqueId).id !== toStep;
+        return !toStepId || _this2.getStepByUniqueId(_this2._treeState.currentStepUniqueId).id !== toStepId;
       };
 
       while (keepGoing.call(this) && this.stepForward(true)) {
         ;
       }
+
+      this._onStep(this._treeState.currentStepUniqueId);
+
+      this._render();
     }
     /**
-     * TODO: implement a rewind/start over method
+     * @param {String} toStepId Step ID to stop on, if omitted go to first step
+     *
+     * IMPORTANT: toStepId should be step.id NOT step.uniqueId
      */
-    // rewind(toStep) {
-    // }
-    // ///////////////////////////
+
+  }, {
+    key: "rewind",
+    value: function rewind(toStepId) {
+      var _this3 = this;
+
+      if (!toStepId) {
+        this.resetTreeState();
+
+        this._onStep(this._treeState.currentStepUniqueId);
+
+        this.render();
+      } else {
+        var keepGoing = function keepGoing() {
+          return _this3.getStepByUniqueId(_this3._treeState.currentStepUniqueId).id !== toStepId;
+        };
+
+        while (keepGoing.call(this) && this.stepBack(true)) {
+          ;
+        }
+
+        this._onStep(this._treeState.currentStepUniqueId);
+
+        this.render();
+      }
+    } // ///////////////////////////
     // ///////////////////////////
     // ///////////////////////////
 
@@ -2204,7 +2300,7 @@ function () {
   }, {
     key: "getNextStepUniqueId",
     value: function getNextStepUniqueId(currentStepUniqueId) {
-      var _this3 = this;
+      var _this4 = this;
 
       var nextStepUniqueId;
 
@@ -2228,7 +2324,7 @@ function () {
             } else if (nextNode.type === 'fork') {
               // If next node is a fork, get the first step of the next branch
               nextStepUniqueId = nextNode.branches[nextNode.getNextBranch({
-                tree: _this3
+                tree: _this4
               })][0].uniqueId;
             }
           }
@@ -2245,6 +2341,101 @@ function () {
     key: "getTreeState",
     value: function getTreeState() {
       return this._treeState;
+    }
+  }, {
+    key: "resetTreeState",
+    value: function resetTreeState() {
+      this._treeState = {
+        currentStepUniqueId: this.config[0].uniqueId,
+        history: [],
+        isFastForwarding: false
+      };
+    }
+  }, {
+    key: "_deepLink",
+    value: function _deepLink() {
+      if (this.deepLinkStepUniqueId) {
+        this.fastForward(this.getStepByUniqueId(this.deepLinkStepUniqueId).id);
+      } else if (this.deepLinkStepId) {
+        this.fastForward(this.deepLinkStepId);
+      } else {
+        this._onStep(this._treeState.currentStepUniqueId);
+      }
+    }
+    /**
+     * Plugin Support
+     */
+
+  }, {
+    key: "_initPlugins",
+    value: function _initPlugins() {
+      var _this5 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            key = _ref4[0],
+            val = _ref4[1];
+
+        try {
+          val.init.call(_this5);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+    }
+  }, {
+    key: "_render",
+    value: function _render(stepUniqueId) {
+      var _this6 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 2),
+            key = _ref6[0],
+            val = _ref6[1];
+
+        try {
+          val.render.call(_this6);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+      this.render(stepUniqueId);
+    }
+  }, {
+    key: "_onStep",
+    value: function _onStep(stepUniqueId) {
+      var _this7 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref7) {
+        var _ref8 = _slicedToArray(_ref7, 2),
+            key = _ref8[0],
+            val = _ref8[1];
+
+        try {
+          val.onStep.call(_this7, stepUniqueId);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+      this.onStep(stepUniqueId);
+    }
+  }, {
+    key: "_onComplete",
+    value: function _onComplete() {
+      var _this8 = this;
+
+      Object.entries(this.plugins).forEach(function (_ref9) {
+        var _ref10 = _slicedToArray(_ref9, 2),
+            key = _ref10[0],
+            val = _ref10[1];
+
+        try {
+          val.onComplete.call(_this8);
+        } catch (err) {
+          /* do nothing */
+        }
+      });
+      this.onComplete();
     }
   }]);
 

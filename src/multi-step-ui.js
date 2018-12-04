@@ -21,8 +21,9 @@ class Tree {
       // //////////////////////////
 
       /*
-        Required
+       * Required
        */
+
       config: [],
 
       /**
@@ -30,32 +31,78 @@ class Tree {
        * Tree render should render whatever layout plus the output of
        * calling `render()` on the current step
        */
-      render() {
+      render() {},
 
-      },
+      /*
+       * Optional
+       */
+
+      /**
+       * Used `deepLinkStepId` to deep link or seed initial step
+       */
+      deepLinkStepId: '',
+
+      /**
+       * `deepLinkStepUniqueId` is mostly used to fastForward to previous
+       * step on page reload internally used to find deepLinkStepId
+       */
+      deepLinkStepUniqueId: '',
+
+      /**
+       * Plugins are objects which implement
+       * any or all of the following methods
+       *
+       * init()
+       * render()
+       * onStep()
+       * onComplete()
+       *
+       * Methods will be called in the context of the tree instance
+       * so best to not use arrow functions which don't have `this`
+       *
+       * Use plugins to add additional functionality such as routing or logging
+       *
+       * Example:
+       *
+       * plugins = {
+       *   aPlugin: {
+       *     init: function() {
+       *       console.log(this); // > Tree
+       *     }
+       *   }
+       * }
+       */
+      plugins: {},
+
+      /**
+       * Called on step change, forward and back
+       *
+       * @param {String} stepUniqueId
+       */
+      onStep(stepUniqueId) {},
 
       /**
        * Optionally provive an `onComplete()` handler at configuration
        * which will be called when the final step (Leaf) is valid
        */
-      onComplete() {
-
-      },
+      onComplete() {},
 
     }, props);
 
-    // Overwrite `this.config`, add unique ID etc.
+    // Overwrite `this.config` (from `props.config`), add unique ID etc.
     this.config = this._mapSteps(cloneDeep(this.config));
 
     // Tree maintains simple navigation state
     // maintaining your own application state separately is recommended
-    this._treeState = {
-      currentStepUniqueId: this.config[0].uniqueId,
-      history: [],
-      isFastForwarding: false
-    };
+    this.resetTreeState();
 
-    this.render();
+    // If we have an deepLinkStepUniqueId or deepLinkStepId
+    // fast forward to it, used for
+    this._deepLink();
+
+    this._initPlugins();
+
+    this._render();
   }
 
   /**
@@ -165,6 +212,9 @@ class Tree {
 
   /**
    * Step _treeState forward by one
+   *
+   * @param {Boolean} isFastForwarding
+   *
    * @return {String} Next step uniqueId
    */
   stepForward(isFastForwarding = false) {
@@ -186,10 +236,13 @@ class Tree {
         this._treeState.history.push(this._treeState.currentStepUniqueId);
       }
       this._treeState.currentStepUniqueId = nextStepUniqueId;
-      this.render();
+      if (!isFastForwarding) {
+        this._onStep(this._treeState.currentStepUniqueId);
+        this._render();
+      }
     } else {
       // No next step means we're at the end of the line
-      this.onComplete();
+      this._onComplete();
       return '';
     }
 
@@ -200,7 +253,7 @@ class Tree {
    * Step _treeState back by one
    * @return {String} Last histroy item
    */
-  stepBack() {
+  stepBack(isRewinding = false) {
     const lastHistoryItem = this._treeState.history.pop();
 
     if (!lastHistoryItem) {
@@ -208,7 +261,10 @@ class Tree {
     }
 
     this._treeState.currentStepUniqueId = lastHistoryItem;
-    this.render();
+    if (!isRewinding) {
+      this._onStep(this._treeState.currentStepUniqueId);
+      this._render();
+    }
 
     return lastHistoryItem;
   }
@@ -216,22 +272,38 @@ class Tree {
   /**
    * Move forward until you can't anymore
    *
-   * @param {String} toStep Step ID to stop on, if omitted keep going as far as possible
+   * @param {String} toStepId Step ID to stop on, if omitted keep going as far as possible
    *
-   * IMPORTANT: toStep should be step.id NOT step.uniqueId
+   * IMPORTANT: toStepId should be step.id NOT step.uniqueId
    */
-  fastForward(toStep) {
+  fastForward(toStepId) {
     const keepGoing = () => {
-      return !toStep || this.getStepByUniqueId(this._treeState.currentStepUniqueId).id !== toStep;
+      return !toStepId || this.getStepByUniqueId(this._treeState.currentStepUniqueId).id !== toStepId;
     };
     while (keepGoing.call(this) && this.stepForward(true));
+    this._onStep(this._treeState.currentStepUniqueId);
+    this._render();
   }
 
   /**
-   * TODO: implement a rewind/start over method
+   * @param {String} toStepId Step ID to stop on, if omitted go to first step
+   *
+   * IMPORTANT: toStepId should be step.id NOT step.uniqueId
    */
-  // rewind(toStep) {
-  // }
+  rewind(toStepId) {
+    if (!toStepId) {
+      this.resetTreeState();
+      this._onStep(this._treeState.currentStepUniqueId);
+      this.render();
+    } else {
+      const keepGoing = () => {
+        return this.getStepByUniqueId(this._treeState.currentStepUniqueId).id !== toStepId;
+      };
+      while (keepGoing.call(this) && this.stepBack(true));
+      this._onStep(this._treeState.currentStepUniqueId);
+      this.render();
+    }
+  }
 
   // ///////////////////////////
   // ///////////////////////////
@@ -292,6 +364,63 @@ class Tree {
 
   getTreeState() {
     return this._treeState;
+  }
+
+  resetTreeState() {
+    this._treeState = {
+      currentStepUniqueId: this.config[0].uniqueId,
+      history: [],
+      isFastForwarding: false
+    };
+  }
+
+  _deepLink() {
+    if (this.deepLinkStepUniqueId) {
+      this.fastForward(this.getStepByUniqueId(this.deepLinkStepUniqueId).id);
+    } else if (this.deepLinkStepId) {
+      this.fastForward(this.deepLinkStepId);
+    } else {
+      this._onStep(this._treeState.currentStepUniqueId);
+    }
+  }
+
+  /**
+   * Plugin Support
+   */
+
+  _initPlugins() {
+    Object.entries(this.plugins).forEach(([key, val]) => {
+      try {
+        val.init.call(this);
+      } catch (err) { /* do nothing */ }
+    });
+  }
+
+  _render(stepUniqueId) {
+    Object.entries(this.plugins).forEach(([key, val]) => {
+      try {
+        val.render.call(this);
+      } catch (err) { /* do nothing */ }
+    });
+    this.render(stepUniqueId);
+  }
+
+  _onStep(stepUniqueId) {
+    Object.entries(this.plugins).forEach(([key, val]) => {
+      try {
+        val.onStep.call(this, stepUniqueId);
+      } catch (err) { /* do nothing */ }
+    });
+    this.onStep(stepUniqueId);
+  }
+
+  _onComplete() {
+    Object.entries(this.plugins).forEach(([key, val]) => {
+      try {
+        val.onComplete.call(this);
+      } catch (err) { /* do nothing */ }
+    });
+    this.onComplete();
   }
 }
 
