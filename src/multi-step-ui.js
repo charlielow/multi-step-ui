@@ -151,19 +151,12 @@ class Tree {
             throw new Error('Step missing required property: id');
           }
 
-          /**
-           * The loaded step needs to retain
-           * prototype chain and trump all default properties
-           * everything needs to be copied back to n, can't use object.assign
-           *
-           * prototype chain is required to support custom step classes incoming
-           */
-
           // Import step if available
           let step;
           try {
             // Attempt to load step from props.steps map
-            // Must deep clone to preserve prototype chain
+            // The loaded step needs to retain prototype chain and trump all default properties
+            // Deep clone to preserve prototype chain to support custom step classes incoming,
             // and so steps that share logic will be copied and thus have unique ID
             step = cloneDeep(this.steps[n.id]);
           } catch (err) { /* do nothing */ }
