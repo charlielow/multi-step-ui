@@ -43,3 +43,11 @@ jspm_packages/
 
 # dotenv environment variables file
 .env
+
+# docusaurus
+
+website/translated_docs
+website/build/
+website/yarn.lock
+website/node_modules
+website/i18n/*
