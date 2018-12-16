@@ -23,8 +23,8 @@ const users = [
 const siteConfig = {
   title: 'Multi-Step UI', // Title for your website.
   tagline: 'Extensible multi-step user flow management with branching',
-  url: 'https://github.com/charlielow/multi-step-ui', // Your website URL
-  baseUrl: '/', // Base URL for your project */
+  url: 'http://charlielow.github.io/', // Your website URL
+  baseUrl: '/multi-step-ui/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
