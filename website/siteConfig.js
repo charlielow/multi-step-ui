@@ -38,8 +38,8 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {doc: 'doc1', label: 'Docs'},
-    {href: 'https://github.com/charlielow/multi-step-ui', label: 'Github'},
+    { doc: 'getting-started', label: 'Docs' },
+    { href: 'https://github.com/charlielow/multi-step-ui', label: 'Github' },
     // {doc: 'doc4', label: 'API'},
     // {page: 'help', label: 'Help'},
     // {blog: true, label: 'Blog'},
@@ -55,7 +55,7 @@ const siteConfig = {
 
   /* Colors for website */
   colors: {
-    primaryColor: '#999',
+    primaryColor: '#20232a',
     secondaryColor: '#555',
   },
 
@@ -75,10 +75,11 @@ const siteConfig = {
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
   copyright: `Copyright © ${new Date().getFullYear()} Charlie Low`,
+  gaTrackingId: 'UA-131300134-1',
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: 'default',
+    theme: 'solarized-dark',
   },
 
   // Add custom scripts here that would be placed in <script> tags.
@@ -101,7 +102,7 @@ const siteConfig = {
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
-  //   repoUrl: 'https://github.com/facebook/test-site',
+  repoUrl: 'https://github.com/charlielow/multi-step-ui',
 };
 
 module.exports = siteConfig;

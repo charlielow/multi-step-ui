@@ -7,18 +7,18 @@ const babelify = require('babelify');
 const sass = require('gulp-sass');
 sass.compiler = require('node-sass');
 
-const docsJsSrc = ['docs/js/src/**/*.js'];
+const docsJsSrc = ['website/static/js/src/**/*.js'];
 const packageJsSrc = ['src/**/*.js'];
-const dataSrc = ['docs/data/**/*.json', 'docs/data/**/*.js'];
+const dataSrc = ['website/static/data/**/*.json', 'website/static/data/**/*.js'];
 
-const docsSassSrc = ['docs/css/src/**/*.scss'];
-const docsCssDest = 'docs/css/dest';
+const docsSassSrc = ['website/static/css/src/**/*.scss'];
+const docsCssDest = 'website/static/css/dest';
 
 gulp.task('default', ['browserify', 'sass', 'watch:js', 'watch:sass']);
 gulp.task('build', ['browserify', 'sass']);
 
 gulp.task('browserify', () => {
-  return gulp.src(docsJsSrc.concat(['!docs/js/src/import/**/*.js']))
+  return gulp.src(docsJsSrc.concat(['!website/static/js/src/import/**/*.js']))
     .pipe(bro({
       transform: [
         babelify.configure({
@@ -29,7 +29,7 @@ gulp.task('browserify', () => {
     }))
 
     // TODO: config var for dest
-    .pipe(gulp.dest('docs/js/dest'));
+    .pipe(gulp.dest('website/static/js/dest'));
 });
 
 gulp.task('sass', () => {
@@ -47,12 +47,12 @@ gulp.task('sass', () => {
 //       presets: ['@babel/env']
 //     }))
 //     .pipe(sourcemaps.write('.'))
-//     .pipe(gulp.dest('docs/js/dest'))
+//     .pipe(gulp.dest('website/static/js/dest'))
 // FIXME: vulnerability
 // //     // .pipe(livereload());
 // );
 
-// Remove coverage, docs/**/dest/*
+// Remove coverage, website/static/**/dest/*
 gulp.task('clean', () => {
   console.log('TODO:...clean');
 });

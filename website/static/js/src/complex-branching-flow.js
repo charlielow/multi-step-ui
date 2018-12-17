@@ -1,4 +1,4 @@
-import { multiStepUi } from '../../../src/multi-step-ui';
+import { multiStepUi } from '../../../../src/multi-step-ui';
 
 require('./import/util/autoPlay')({
   stepForwardMs: 200,

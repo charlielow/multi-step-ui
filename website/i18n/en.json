@@ -5,21 +5,41 @@
     "previous": "Previous",
     "tagline": "Extensible multi-step user flow management with branching",
     "docs": {
-      "doc1": {
-        "title": "Latin-ish",
-        "sidebar_label": "Example Page"
+      "complex-branching-flow": {
+        "title": "Complex branching flow",
+        "sidebar_label": "Complex branching flow"
       },
-      "doc2": {
-        "title": "document number 2"
+      "fork": {
+        "title": "Fork",
+        "sidebar_label": "Fork"
       },
-      "doc3": {
-        "title": "This is document number 3"
+      "getting-started": {
+        "title": "Multi-Step UI",
+        "sidebar_label": "Getting Started"
       },
-      "doc4": {
-        "title": "Other Document"
+      "minimal-debug-only": {
+        "title": "Minimal, debug only",
+        "sidebar_label": "Minimal, debug only"
       },
-      "doc5": {
-        "title": "Fifth Document"
+      "multi-step-ui": {
+        "title": "multiStepUi()",
+        "sidebar_label": "multiStepUi()"
+      },
+      "sign-up-flow-react": {
+        "title": "Sign up flow with React",
+        "sidebar_label": "Sign up flow with React"
+      },
+      "simple-flow-with-react": {
+        "title": "Simple flow with React",
+        "sidebar_label": "Simple flow with React"
+      },
+      "step": {
+        "title": "Step",
+        "sidebar_label": "Step"
+      },
+      "tree": {
+        "title": "Tree",
+        "sidebar_label": "Tree"
       }
     },
     "links": {
@@ -29,8 +49,7 @@
     "categories": {
       "Introduction": "Introduction",
       "Examples": "Examples",
-      "API Reference": "API Reference",
-      "First Category": "First Category"
+      "API Reference": "API Reference"
     }
   },
   "pages-strings": {

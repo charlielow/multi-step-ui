@@ -1,161 +1,4 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.config = void 0;
-
-var _forks = require("../js/src/import/util/forks");
-
-var maxStepsPerBranch = 3;
-var maxBranchesPerFork = 3;
-var maxForks = 3;
-var forksCount = 0;
-/**
- * Some logic for dynamically creating a
- * tree with generic steps and forks based on the
- * congiguration settings above
- */
-
-var createBranch = function createBranch() {
-  var ret = [];
-  var howManySteps = Math.ceil(Math.random() * maxStepsPerBranch);
-
-  for (var i = 1; i <= howManySteps; i++) {
-    ret.push(Object.assign({}, aStep));
-  }
-
-  if (maxForks !== 0 && forksCount <= maxForks) {
-    var fork = Object.assign({}, aFork);
-    fork.getNextBranch = _forks.spinTheBottle.getNextBranch;
-    ret.push(fork);
-    fork.branches = {};
-    forksCount++;
-    var howManyBranches = Math.ceil(Math.random() * maxBranchesPerFork);
-
-    if (howManyBranches < 2) {
-      howManyBranches = 2;
-    }
-
-    for (var i = 1; i <= howManyBranches; i++) {
-      fork.branches['branch' + i] = createBranch();
-    }
-  }
-
-  return ret;
-};
-
-var aStep = {
-  id: 'step'
-};
-var aFork = {
-  type: 'fork',
-  id: 'fork'
-};
-var config = createBranch();
-exports.config = config;
-
-},{"../js/src/import/util/forks":3}],2:[function(require,module,exports){
-"use strict";
-
-var autoPlay = function autoPlay(p) {
-  var props = Object.assign({
-    stepForwardMs: 950,
-    stepBackMs: 250,
-    autoPlay: true
-  }, p); // TODO: come back to this
-  // Some crazy test logic to automate stepping
-  // through the flow then back out again over and over
-  // assumes no validation on steps, forks get a random branch
-
-  window.startAutoStepForward = function () {
-    try {
-      window.clearInterval(window.stepForwardInterval);
-      window.clearInterval(window.stepBackInterval);
-    } catch (err) {
-      /* do nothing */
-    }
-
-    window.stepForwardInterval = window.setInterval(function () {
-      if (!window.msuFlow.stepForward()) {
-        window.clearInterval(window.stepForwardInterval);
-        window.stepBackInterval = window.setInterval(function () {
-          if (!window.msuFlow.stepBack()) {
-            window.clearInterval(window.stepBackInterval);
-            window.startAutoStepForward();
-          }
-        }, props.stepBackMs);
-      }
-    }, props.stepForwardMs);
-  };
-
-  window.stopAutoStepForward = function () {
-    window.clearInterval(window.stepForwardInterval);
-    window.clearInterval(window.stepBackInterval);
-  };
-
-  document.getElementById('start-auto-play').addEventListener('click', window.startAutoStepForward);
-  document.getElementById('stop-auto-play').addEventListener('click', window.stopAutoStepForward);
-
-  if (props.autoPlay === true) {
-    window.startAutoStepForward();
-  }
-};
-
-module.exports = autoPlay;
-
-},{}],3:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.spinTheBottle = void 0;
-
-/**
- * Get a random branch
- */
-var spinTheBottle = {
-  /**
-   * Fork logic for determining next step
-   * @return {String} Branch key (name)
-   */
-  getNextBranch: function getNextBranch() {
-    var keys = Object.keys(this.branches);
-    var len = keys.length;
-    return keys[Math.floor(Math.random() * len)];
-  }
-};
-exports.spinTheBottle = spinTheBottle;
-
-},{}],4:[function(require,module,exports){
-"use strict";
-
-var _multiStepUi = require("../../../src/multi-step-ui");
-
-var _generateComplexBranchingFlow = require("../../data/generate-complex-branching-flow");
-
-require('./import/util/autoPlay')({
-  stepForwardMs: 200,
-  stepBackMs: 50,
-  autoPlay: true
-}); // Import config, steps, forks and render for this example page
-
-
-// Debug original config
-document.getElementById('debug-config').innerHTML = JSON.stringify(_generateComplexBranchingFlow.config, null, 2); // Create and configure the multi step flow
-
-var msuFlow = (0, _multiStepUi.multiStepUi)({
-  config: _generateComplexBranchingFlow.config,
-  render: function render() {
-    document.getElementById('debug-tree-state').innerHTML = JSON.stringify(this._treeState, null, 2);
-  }
-}); // Assign to a global property for debugging purposes
-
-window.msuFlow = msuFlow;
-
-},{"../../../src/multi-step-ui":6,"../../data/generate-complex-branching-flow":1,"./import/util/autoPlay":2}],5:[function(require,module,exports){
 (function (global){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -1907,7 +1750,7 @@ function stubFalse() {
 module.exports = cloneDeep;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2088,22 +1931,15 @@ function () {
             // Assume anything other than type: fork is type: step
             if (!n.id) {
               throw new Error('Step missing required property: id');
-            }
-            /**
-             * The loaded step needs to retain
-             * prototype chain and trump all default properties
-             * everything needs to be copied back to n, can't use object.assign
-             *
-             * prototype chain is required to support custom step classes incoming
-             */
-            // Import step if available
+            } // Import step if available
 
 
             var step;
 
             try {
               // Attempt to load step from props.steps map
-              // Must deep clone to preserve prototype chain
+              // The loaded step needs to retain prototype chain and trump all default properties
+              // Deep clone to preserve prototype chain to support custom step classes incoming,
               // and so steps that share logic will be copied and thus have unique ID
               step = (0, _lodash.default)(_this.steps[n.id]);
             } catch (err) {
@@ -2451,7 +2287,7 @@ var multiStepUi = function multiStepUi(props) {
 
 exports.multiStepUi = multiStepUi;
 
-},{"./util":7,"lodash.clonedeep":5}],7:[function(require,module,exports){
+},{"./util":3,"lodash.clonedeep":1}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2534,4 +2370,161 @@ var util = {
 var _default = util;
 exports.default = _default;
 
-},{}]},{},[4]);
+},{}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.config = void 0;
+
+var _forks = require("../js/src/import/util/forks");
+
+var maxStepsPerBranch = 3;
+var maxBranchesPerFork = 3;
+var maxForks = 3;
+var forksCount = 0;
+/**
+ * Some logic for dynamically creating a
+ * tree with generic steps and forks based on the
+ * congiguration settings above
+ */
+
+var createBranch = function createBranch() {
+  var ret = [];
+  var howManySteps = Math.ceil(Math.random() * maxStepsPerBranch);
+
+  for (var i = 1; i <= howManySteps; i++) {
+    ret.push(Object.assign({}, aStep));
+  }
+
+  if (maxForks !== 0 && forksCount <= maxForks) {
+    var fork = Object.assign({}, aFork);
+    fork.getNextBranch = _forks.spinTheBottle.getNextBranch;
+    ret.push(fork);
+    fork.branches = {};
+    forksCount++;
+    var howManyBranches = Math.ceil(Math.random() * maxBranchesPerFork);
+
+    if (howManyBranches < 2) {
+      howManyBranches = 2;
+    }
+
+    for (var i = 1; i <= howManyBranches; i++) {
+      fork.branches['branch' + i] = createBranch();
+    }
+  }
+
+  return ret;
+};
+
+var aStep = {
+  id: 'step'
+};
+var aFork = {
+  type: 'fork',
+  id: 'fork'
+};
+var config = createBranch();
+exports.config = config;
+
+},{"../js/src/import/util/forks":6}],5:[function(require,module,exports){
+"use strict";
+
+var autoPlay = function autoPlay(p) {
+  var props = Object.assign({
+    stepForwardMs: 950,
+    stepBackMs: 250,
+    autoPlay: true
+  }, p); // TODO: come back to this
+  // Some crazy test logic to automate stepping
+  // through the flow then back out again over and over
+  // assumes no validation on steps, forks get a random branch
+
+  window.startAutoStepForward = function () {
+    try {
+      window.clearInterval(window.stepForwardInterval);
+      window.clearInterval(window.stepBackInterval);
+    } catch (err) {
+      /* do nothing */
+    }
+
+    window.stepForwardInterval = window.setInterval(function () {
+      if (!window.msuFlow.stepForward()) {
+        window.clearInterval(window.stepForwardInterval);
+        window.stepBackInterval = window.setInterval(function () {
+          if (!window.msuFlow.stepBack()) {
+            window.clearInterval(window.stepBackInterval);
+            window.startAutoStepForward();
+          }
+        }, props.stepBackMs);
+      }
+    }, props.stepForwardMs);
+  };
+
+  window.stopAutoStepForward = function () {
+    window.clearInterval(window.stepForwardInterval);
+    window.clearInterval(window.stepBackInterval);
+  };
+
+  document.getElementById('start-auto-play').addEventListener('click', window.startAutoStepForward);
+  document.getElementById('stop-auto-play').addEventListener('click', window.stopAutoStepForward);
+
+  if (props.autoPlay === true) {
+    window.startAutoStepForward();
+  }
+};
+
+module.exports = autoPlay;
+
+},{}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.spinTheBottle = void 0;
+
+/**
+ * Get a random branch
+ */
+var spinTheBottle = {
+  /**
+   * Fork logic for determining next step
+   * @return {String} Branch key (name)
+   */
+  getNextBranch: function getNextBranch() {
+    var keys = Object.keys(this.branches);
+    var len = keys.length;
+    return keys[Math.floor(Math.random() * len)];
+  }
+};
+exports.spinTheBottle = spinTheBottle;
+
+},{}],7:[function(require,module,exports){
+"use strict";
+
+var _multiStepUi = require("../../../../src/multi-step-ui");
+
+var _generateComplexBranchingFlow = require("../../data/generate-complex-branching-flow");
+
+require('./import/util/autoPlay')({
+  stepForwardMs: 200,
+  stepBackMs: 50,
+  autoPlay: true
+}); // Import config, steps, forks and render for this example page
+
+
+// Debug original config
+document.getElementById('debug-config').innerHTML = JSON.stringify(_generateComplexBranchingFlow.config, null, 2); // Create and configure the multi step flow
+
+var msuFlow = (0, _multiStepUi.multiStepUi)({
+  config: _generateComplexBranchingFlow.config,
+  render: function render() {
+    document.getElementById('debug-tree-state').innerHTML = JSON.stringify(this._treeState, null, 2);
+  }
+}); // Assign to a global property for debugging purposes
+
+window.msuFlow = msuFlow;
+
+},{"../../../../src/multi-step-ui":2,"../../data/generate-complex-branching-flow":4,"./import/util/autoPlay":5}]},{},[7]);

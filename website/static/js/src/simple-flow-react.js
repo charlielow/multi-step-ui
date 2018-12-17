@@ -1,4 +1,4 @@
-import { multiStepUi } from '../../../src/multi-step-ui';
+import { multiStepUi } from '../../../../src/multi-step-ui';
 
 // Import config, steps, forks and render for this example page
 const config = require('../../data/simple-flow-react.json');
