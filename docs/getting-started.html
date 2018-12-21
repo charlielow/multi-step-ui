@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Multi-Step UI · Multi-Step UI</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;p&gt;&lt;em&gt;&lt;strong&gt;WARNING&lt;/strong&gt;  this project is currently in pre-release beta, under development and subject to change&lt;/em&gt;&lt;/p&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Multi-Step UI · Multi-Step UI"/><meta property="og:type" content="website"/><meta property="og:url" content="http://charlielow.github.io//multi-step-ui/index.html"/><meta property="og:description" content="&lt;p&gt;&lt;em&gt;&lt;strong&gt;WARNING&lt;/strong&gt;  this project is currently in pre-release beta, under development and subject to change&lt;/em&gt;&lt;/p&gt;
+"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/multi-step-ui/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-dark.min.css"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-131300134-1', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/multi-step-ui/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/multi-step-ui/"><h2 class="headerTitle">Multi-Step UI</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive siteNavItemActive"><a href="/multi-step-ui/docs/getting-started" target="_self">Docs</a></li><li class=""><a href="https://github.com/charlielow/multi-step-ui" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Introduction</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul><li class="navListItem navListItemActive"><a class="navItem" href="/multi-step-ui/docs/getting-started">Getting Started</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Examples</h3><ul><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/simple-flow-with-react">Simple flow with React</a></li><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/complex-branching-flow">Complex branching flow</a></li><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/minimal-debug-only">Minimal, debug only</a></li><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/sign-up-flow-react">Sign up flow with React</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/multi-step-ui">multiStepUi()</a></li><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/tree">Tree</a></li><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/step">Step</a></li><li class="navListItem"><a class="navItem" href="/multi-step-ui/docs/fork">Fork</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Multi-Step UI</h1></header><article><div><span><p><em><strong>WARNING</strong>  this project is currently in pre-release beta, under development and subject to change</em></p>
+<p><a href="https://travis-ci.com/charlielow/multi-step-ui"><img src="https://travis-ci.com/charlielow/multi-step-ui.svg?branch=master" alt="Build Status"></a> <a href="https://github.com/charlielow/multi-step-ui"><img src="https://img.shields.io/npm/v/multi-step-ui.svg" alt="npm"></a></p>
+<p>A lightweight framework for <strong>managing a multi-step user flows</strong></p>
+<p>Provides step mapping and navigation through nested branches and a simple, extensible interface for steps and forks</p>
+<ul>
+<li><strong>Enrollment, onboarding or sign-up flows</strong></li>
+<li>Help / FAQ triage flows</li>
+<li>Troubleshooting guides</li>
+</ul>
+<blockquote>
+<p>Multi-Step UI is <strong>not</strong> a view library, integrate with React or any other templating engine or view library</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="install"></a><a href="#install" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Install</h2>
+<pre><code class="hljs css language-sh">$ npm i multi-step-ui
+</code></pre>
+<p>or</p>
+<pre><code class="hljs css language-sj">$ yarn <span class="hljs-keyword">add </span><span class="hljs-keyword">multi-step-ui
+</span></code></pre>
+<h2><a class="anchor" aria-hidden="true" id="how-it-works"></a><a href="#how-it-works" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How it works</h2>
+<blockquote>
+<p>Note: this example illustrates basic usage but does not implement views for each step, check out <a href="https://charlielow.github.io/multi-step-ui/docs/simple-flow-with-react">the examples</a> for more details</p>
+</blockquote>
+<p>Import multiStepUi</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> { multiStepUi } <span class="hljs-keyword">from</span> <span class="hljs-string">'multi-step-ui'</span>;
+</code></pre>
+<p>Configure your flow, ideally in an external JSON file.</p>
+<p>Config is just a list of steps and forks, forks contain branches which in turn contain more steps, steps and forks are mapped by id to controlers</p>
+<pre><code class="hljs">const<span class="hljs-built_in"> config </span>= [
+  {
+    <span class="hljs-string">"id"</span>: <span class="hljs-string">"stepOne"</span>
+  },
+  {
+    <span class="hljs-string">"id"</span>: <span class="hljs-string">"stepTwo"</span>
+  },
+  {
+    <span class="hljs-string">"type"</span>: <span class="hljs-string">"fork"</span>,
+    <span class="hljs-string">"id"</span>: <span class="hljs-string">"forkOne"</span>,
+    <span class="hljs-string">"branches"</span>: {
+      <span class="hljs-string">"branchA"</span>: [
+        {
+          <span class="hljs-string">"id"</span>: <span class="hljs-string">"congratsBranchA"</span>
+        }
+      ],
+      <span class="hljs-string">"branchB"</span>: [
+        {
+          <span class="hljs-string">"id"</span>: <span class="hljs-string">"congratsSranchB"</span>
+        }
+      ]
+    }
+  }
+];
+</code></pre>
+<p>Create your flow</p>
+<pre><code class="hljs"><span class="hljs-keyword">const</span> flow = multiStepUi({
+  config,
+
+  <span class="hljs-comment">// Map your Steps to step controllers by step.id (details later)</span>
+
+  steps: {},
+
+  <span class="hljs-comment">// Map your Forks to fork controllers by fork.id</span>
+
+  forks: {
+    <span class="hljs-attr">forkOne</span>: {
+
+      <span class="hljs-comment">// Forks manage branching logic, for now just choose a branch at random</span>
+
+      getNextBranch: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(<span class="hljs-keyword">this</span>.branches);
+        <span class="hljs-keyword">const</span> len = keys.length;
+        <span class="hljs-keyword">return</span> keys[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * len)];
+      }
+    }
+  },
+
+  <span class="hljs-comment">// Define a Tree render method</span>
+
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'debug-tree-state'</span>)
+      .innerHTML = <span class="hljs-built_in">JSON</span>.stringify(<span class="hljs-keyword">this</span>._treeState, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>);
+  }
+});
+</code></pre>
+<p>Now check out <a href="https://charlielow.github.io/multi-step-ui/docs/simple-flow-with-react">the examples</a> for more details</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-next button" href="/multi-step-ui/docs/simple-flow-with-react"><span>Simple flow with React</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#install">Install</a></li><li><a href="#how-it-works">How it works</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/multi-step-ui/" class="nav-home"></a><div><h5>Docs</h5><a href="/multi-step-ui/docs/getting-started.html">Getting Started</a><a href="/multi-step-ui/docs/tree.html">API Reference</a></div><div><h5>More</h5><a href="https://github.com/charlielow/multi-step-ui">GitHub</a><a class="github-button" href="https://github.com/charlielow/multi-step-ui" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2018 Charlie Low</section></footer></div></body></html>
