@@ -17,13 +17,12 @@ Provides step mapping and navigation through nested branches and a simple, exten
 
 ## Install
 
-__npm__
 
 ```sh
 $ npm i multi-step-ui
 ```
 
-__yarn__
+or
 
 ```sj
 $ yarn add multi-step-ui
