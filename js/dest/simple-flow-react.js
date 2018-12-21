@@ -26554,7 +26554,7 @@ var _render = require("./import/simple-flow-react/render");
 
 var _dummy = require("./import/plugins/dummy");
 
-// Import config, steps, forks and render for this example page
+// Import config, steps, forks, render and plugins for this example page
 var config = require('../../data/simple-flow-react.json');
 
 // Create and configure the multi step flow
@@ -26564,7 +26564,6 @@ var msuFlow = (0, _multiStepUi.multiStepUi)({
   forks: _forks.forks,
   render: _render.render,
   plugins: _dummy.plugins,
-  // deepLinkStepUniqueId: 'stepTwo2',
   store: {
     name: 'Bob Smith',
     email: 'bob.smith@email.com',
@@ -26579,8 +26578,6 @@ var msuFlow = (0, _multiStepUi.multiStepUi)({
   }
 }); // Assign to a global property for debugging purposes
 
-window.msuFlow = msuFlow; // TODO: remove
-// msuFlow.stepForward();
-// msuFlow.fastForward('stepTwo');
+window.msuFlow = msuFlow;
 
 },{"../../../../src/multi-step-ui":3,"../../data/simple-flow-react.json":20,"./import/plugins/dummy":23,"./import/simple-flow-react/forks":26,"./import/simple-flow-react/render":27,"./import/simple-flow-react/steps":28}]},{},[29]);

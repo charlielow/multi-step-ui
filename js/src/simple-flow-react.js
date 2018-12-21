@@ -1,6 +1,6 @@
 import { multiStepUi } from '../../../../src/multi-step-ui';
 
-// Import config, steps, forks and render for this example page
+// Import config, steps, forks, render and plugins for this example page
 const config = require('../../data/simple-flow-react.json');
 import { steps } from './import/simple-flow-react/steps';
 import { forks } from './import/simple-flow-react/forks';
@@ -14,10 +14,7 @@ var msuFlow = multiStepUi({
   steps,
   forks,
   render,
-
   plugins,
-
-  // deepLinkStepUniqueId: 'stepTwo2',
 
   store: {
     name: 'Bob Smith',
@@ -38,7 +35,3 @@ var msuFlow = multiStepUi({
 
 // Assign to a global property for debugging purposes
 window.msuFlow = msuFlow;
-
-// TODO: remove
-// msuFlow.stepForward();
-// msuFlow.fastForward('stepTwo');

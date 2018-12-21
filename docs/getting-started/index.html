@@ -60,7 +60,7 @@
 <p>Import multiStepUi</p>
 <pre><code class="hljs"><span class="hljs-keyword">import</span> { multiStepUi } <span class="hljs-keyword">from</span> <span class="hljs-string">'multi-step-ui'</span>;
 </code></pre>
-<p>Configure your flow, ideally in an external JSON file.</p>
+<p>Configure your flow, ideally in an external JSON file</p>
 <p>Config is just a list of steps and forks, forks contain branches which in turn contain more steps, steps and forks are mapped by id to controlers</p>
 <pre><code class="hljs">const<span class="hljs-built_in"> config </span>= [
   {
@@ -87,7 +87,7 @@
   }
 ];
 </code></pre>
-<p>Create your flow</p>
+<p>Create your flow, <code>multiStepUi</code> is a factory function expecting a props object</p>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> flow = multiStepUi({
   config,
 
