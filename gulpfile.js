@@ -12,7 +12,7 @@ const packageJsSrc = ['src/**/*.js'];
 const dataSrc = ['website/static/data/**/*.json', 'website/static/data/**/*.js'];
 
 const docsSassSrc = ['website/static/css/src/**/*.scss'];
-const docsCssDest = 'website/static/css/dest';
+const docsCssDest = 'website/static/css';
 
 gulp.task('default', ['browserify', 'sass', 'watch:js', 'watch:sass']);
 gulp.task('build', ['browserify', 'sass']);
