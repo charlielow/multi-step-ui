@@ -42,7 +42,7 @@ Import multiStepUi
 import { multiStepUi } from 'multi-step-ui';
 ```
 
-Configure your flow, ideally in an external JSON file.
+Configure your flow, ideally in an external JSON file
 
 Config is just a list of steps and forks, forks contain branches which in turn contain more steps, steps and forks are mapped by id to controlers
 
@@ -73,7 +73,7 @@ const config = [
 ];
 ```
 
-Create your flow
+Create your flow, `multiStepUi` is a factory function expecting a props object
 
 ```
 const flow = multiStepUi({
