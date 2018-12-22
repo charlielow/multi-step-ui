@@ -4,7 +4,7 @@ title: Simple flow with React
 sidebar_label: Simple flow with React
 ---
 
-This example showcases a fully functional, short web flow consisting of 4 steps and one fork.
+This example showcases a fully functional, short web flow using React, consisting of 4 steps and one fork.
 
 Steps collect user info via form inputs and validate on submit.
 

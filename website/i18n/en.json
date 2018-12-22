@@ -22,7 +22,7 @@
         "sidebar_label": "Minimal, debug only"
       },
       "multi-step-ui": {
-        "title": "multiStepUi()",
+        "title": "multiStepUi(props)",
         "sidebar_label": "multiStepUi()"
       },
       "sign-up-flow-react": {
