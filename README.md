@@ -30,7 +30,7 @@ $ yarn add multi-step-ui
 
 ## Getting Started
 
-[https://charlielow.github.io/multi-step-ui/docs/multi-step-ui/getting-started](https://charlielow.github.io/multi-step-ui/docs/multi-step-ui/getting-started)
+[https://charlielow.github.io/multi-step-ui](https://charlielow.github.io/multi-step-ui)
 
 ## Examples
 

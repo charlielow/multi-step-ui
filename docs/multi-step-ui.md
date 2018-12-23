@@ -97,11 +97,19 @@ const render = function () {
 }
 ```
 
-Also, it's only called on the last step while fast-forwarding or rewinding
+Also, `render()` is only called on the last step while fast-forwarding or rewinding
 
 ## deepLinkStepId
 
+`deepLinkStepId` is a the string `id` for a [Step](step.md) which can be used to deep link to or seed an initial step
+
+If provided, the [Tree](tree.md) will attempt to fast-forward to the first [Step](step.md) with this id, but will also stop if an invalid [Step](step.md) is encountered
+
 ## deepLinkStepUniqueId
+
+`deepLinkStepUniqueId` is a the string `uniqueId` (auto-generated and different from `id`) for a [Step](step.md), used to deep link to or seed initial step, internally used to find `deepLinkStepId`
+
+`deepLinkStepUniqueId` is mostly used to fastForward back to a step on page reload
 
 ## plugins
 
