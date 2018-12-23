@@ -38,15 +38,22 @@
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">multiStepUi(props)</h1></header><article><div><span><pre><code class="hljs"><span class="hljs-keyword">import</span> { multiStepUi } <span class="hljs-keyword">from</span> <span class="hljs-string">'multi-step-ui'</span>;
 </code></pre>
 <p><code>multiStepUi()</code> is a factory function which expects a <code>props</code> object</p>
-<p><code>props</code> has 2 required properties, <a href="#config">config</a> and <a href="#render">render()</a> everything else below is optional</p>
+<p><code>props</code> has 2 required properties, <a href="#config">config</a> and <a href="#render">render()</a> everything else is optional</p>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> instanceOfTree = multiStepUi({
+  
+  <span class="hljs-comment">// Required</span>
   config: {
     <span class="hljs-comment">// ...</span>
   },
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{}
+  
+  <span class="hljs-comment">// Optional</span>
+  deepLinkStepId: <span class="hljs-string">''</span>,
+  deepLinkStepUniqueId: <span class="hljs-string">''</span>,
+  plugins: {},
+  onStep(stepUniqueId) {},
+  onComplete() {},
 
-  render: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-
-  }
 });
 </code></pre>
 <p><code>multiStepUi()</code> returns an instance of <a href="/multi-step-ui/docs/tree">Tree</a></p>
@@ -93,7 +100,7 @@
 <h2><a class="anchor" aria-hidden="true" id="render"></a><a href="#render" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>render()</h2>
 <p>The <code>render()</code> method is always called after changing steps and is responsible for rendering your UI</p>
 <blockquote>
-<p>Note, <code>render()</code> is called in the context of your <a href="/multi-step-ui/docs/tree">Tree</a>
+<p>Note, <code>render()</code>, like other methods, is called in the context of your <a href="/multi-step-ui/docs/tree">Tree</a>
 <br>so <strong>don't use an arrow function</strong> which won't have <code>this</code></p>
 </blockquote>
 <p>This is your top-level render method which should also take care of rendering the current step by calling <code>renderStep()</code> on the current <a href="/multi-step-ui/docs/step">Step</a></p>
@@ -108,10 +115,40 @@
   <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>).innerHTML = <span class="hljs-built_in">JSON</span>.stringify(<span class="hljs-keyword">this</span>._treeState, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>);
 }
 </code></pre>
-<p>Also, it's only called on the last step while fast-forwarding or rewinding</p>
+<p>Also, <code>render()</code> is only called on the last step while fast-forwarding or rewinding</p>
 <h2><a class="anchor" aria-hidden="true" id="deeplinkstepid"></a><a href="#deeplinkstepid" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>deepLinkStepId</h2>
+<p><code>deepLinkStepId</code> is a the string <code>id</code> for a <a href="/multi-step-ui/docs/step">Step</a> which can be used to deep link to or seed an initial step</p>
+<p>If provided, the <a href="/multi-step-ui/docs/tree">Tree</a> will attempt to fast-forward to the first <a href="/multi-step-ui/docs/step">Step</a> with this id, but will also stop if an invalid <a href="/multi-step-ui/docs/step">Step</a> is encountered</p>
 <h2><a class="anchor" aria-hidden="true" id="deeplinkstepuniqueid"></a><a href="#deeplinkstepuniqueid" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>deepLinkStepUniqueId</h2>
+<p><code>deepLinkStepUniqueId</code> is a the string <code>uniqueId</code> (auto-generated and different from <code>id</code>) for a <a href="/multi-step-ui/docs/step">Step</a>, used to deep link to or seed initial step, internally used to find <code>deepLinkStepId</code></p>
+<p><code>deepLinkStepUniqueId</code> is mostly used to fastForward back to a step on page reload</p>
 <h2><a class="anchor" aria-hidden="true" id="plugins"></a><a href="#plugins" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>plugins</h2>
+<p>Use plugins to add additional functionality such as routing or logging</p>
+<p>Plugins are objects which implement any or all of the following methods</p>
+<p><code>init()</code>
+<code>render()</code>
+<code>onStep()</code>
+<code>onComplete()</code></p>
+<blockquote>
+<p>Note, methods are called in the context of your <a href="/multi-step-ui/docs/tree">Tree</a>
+<br>so <strong>don't use an arrow function</strong> which won't have <code>this</code></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="hljs"><span class="hljs-keyword">const</span> plugins = {
+  <span class="hljs-attr">aPlugin</span>: {
+    <span class="hljs-attr">init</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// &gt; Tree</span>
+    }
+  }
+}
+</code></pre>
 <h2><a class="anchor" aria-hidden="true" id="onstep"></a><a href="#onstep" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onStep()</h2>
+<p><code>onStep()</code> is passed the current <a href="/multi-step-ui/docs/step">Step</a> <code>stepUniqueId</code> and called on step change, called when moving forward and back</p>
+<p>Example:</p>
+<pre><code class="hljs"><span class="hljs-keyword">const</span> onStep = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">stepUniqueId</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.getTreeState().currentStepUniqueId);
+}
+</code></pre>
 <h2><a class="anchor" aria-hidden="true" id="oncomplete"></a><a href="#oncomplete" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onComplete()</h2>
+<p>Optionally provive an <code>onComplete()</code> handler which will be called when the final <a href="/multi-step-ui/docs/step">Step</a> is validated</p>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/multi-step-ui/docs/sign-up-flow-react"><span class="arrow-prev">← </span><span>Sign up flow with React</span></a><a class="docs-next button" href="/multi-step-ui/docs/tree"><span>Tree</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#config">config</a></li><li><a href="#render">render()</a></li><li><a href="#deeplinkstepid">deepLinkStepId</a></li><li><a href="#deeplinkstepuniqueid">deepLinkStepUniqueId</a></li><li><a href="#plugins">plugins</a></li><li><a href="#onstep">onStep()</a></li><li><a href="#oncomplete">onComplete()</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/multi-step-ui/" class="nav-home"></a><div><h5>Docs</h5><a href="/multi-step-ui/docs/getting-started.html">Getting Started</a><a href="/multi-step-ui/docs/tree.html">API Reference</a></div><div><h5>More</h5><a href="https://github.com/charlielow/multi-step-ui">GitHub</a><a class="github-button" href="https://github.com/charlielow/multi-step-ui" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2018 Charlie Low</section></footer></div></body></html>
