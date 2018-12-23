@@ -11,17 +11,24 @@ import { multiStepUi } from 'multi-step-ui';
 
 `multiStepUi()` is a factory function which expects a `props` object
 
-`props` has 2 required properties, [config](#config) and [render()](#render) everything else below is optional
+`props` has 2 required properties, [config](#config) and [render()](#render) everything else is optional
 
 ```
 const instanceOfTree = multiStepUi({
+  
+  // Required
   config: {
     // ...
   },
+  render: function () {}
+  
+  // Optional
+  deepLinkStepId: '',
+  deepLinkStepUniqueId: '',
+  plugins: {},
+  onStep(stepUniqueId) {},
+  onComplete() {},
 
-  render: function () {
-
-  }
 });
 ```
 
@@ -75,7 +82,7 @@ const instanceOfTree = multiStepUi({
 
 The `render()` method is always called after changing steps and is responsible for rendering your UI
 
-> Note, `render()` is called in the context of your [Tree](tree.md)
+> Note, `render()`, like other methods, is called in the context of your [Tree](tree.md)
 > <br>so __don't use an arrow function__ which won't have `this`
 
 This is your top-level render method which should also take care of rendering the current step by calling `renderStep()` on the current [Step](step.md)
@@ -113,8 +120,44 @@ If provided, the [Tree](tree.md) will attempt to fast-forward to the first [Step
 
 ## plugins
 
+Use plugins to add additional functionality such as routing or logging
+
+Plugins are objects which implement any or all of the following methods
+
+`init()` 
+`render()` 
+`onStep()` 
+`onComplete()` 
+
+> Note, methods are called in the context of your [Tree](tree.md)
+> <br>so __don't use an arrow function__ which won't have `this`
+
+
+Example:
+
+```
+const plugins = {
+  aPlugin: {
+    init: function() {
+      console.log(this); // > Tree
+    }
+  }
+}
+```
+
 ## onStep()
+
+`onStep()` is passed the current [Step](step.md) `stepUniqueId` and called on step change, called when moving forward and back
+
+Example:
+
+```
+const onStep = function (stepUniqueId) {
+  console.log(this.getTreeState().currentStepUniqueId);
+}
+```
+
 
 ## onComplete()
 
-
+Optionally provive an `onComplete()` handler which will be called when the final [Step](step.md) is validated
