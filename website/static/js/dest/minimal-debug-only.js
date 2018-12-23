@@ -1815,7 +1815,7 @@ function () {
        */
 
       /**
-       * Used `deepLinkStepId` to deep link or seed initial step
+       * Use `deepLinkStepId` to deep link or seed initial step
        */
       deepLinkStepId: '',
 

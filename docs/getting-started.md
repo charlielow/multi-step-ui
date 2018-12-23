@@ -44,7 +44,7 @@ import { multiStepUi } from 'multi-step-ui';
 
 Configure your flow, ideally in an external JSON file
 
-Config is just a list of steps and forks, forks contain branches which in turn contain more steps, steps and forks are mapped by id to controlers
+[Config](multi-step-ui.md#config) is just a list of steps and forks, forks contain branches which in turn contain more steps, steps and forks are mapped by id to controlers
 
 ```
 const config = [
@@ -73,7 +73,7 @@ const config = [
 ];
 ```
 
-Create your flow, `multiStepUi` is a factory function expecting a props object
+Create your flow, `multiStepUi` is a factory function expecting a props object, see [multiStepUi()](multi-step-ui.md)
 
 ```
 const flow = multiStepUi({
@@ -107,5 +107,5 @@ const flow = multiStepUi({
 });
 ```
 
-Now check out [the examples](https://charlielow.github.io/multi-step-ui/docs/simple-flow-with-react) for more details
+Now check out the [API Refernce](multi-step-ui.md) and [Examples](https://charlielow.github.io/multi-step-ui/docs/simple-flow-with-react) for more details
 
