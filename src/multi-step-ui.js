@@ -29,7 +29,7 @@ class Tree {
       /**
        * Tree render method is required and provided at configuration
        * Tree render should render whatever layout plus the output of
-       * calling `render()` on the current step
+       * calling `renderStep()` on the current step
        */
       render() {},
 
@@ -287,14 +287,14 @@ class Tree {
     if (!toStepId) {
       this.resetTreeState();
       this._onStep(this._treeState.currentStepUniqueId);
-      this.render();
+      this._render();
     } else {
       const keepGoing = () => {
         return this.getStepByUniqueId(this._treeState.currentStepUniqueId).id !== toStepId;
       };
       while (keepGoing.call(this) && this.stepBack(true));
       this._onStep(this._treeState.currentStepUniqueId);
-      this.render();
+      this._render();
     }
   }
 

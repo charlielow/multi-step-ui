@@ -73,6 +73,32 @@ const instanceOfTree = multiStepUi({
 
 ## render()
 
+The `render()` method is always called after changing steps and is responsible for rendering your UI
+
+> Note, `render()` is called in the context of your [Tree](tree.md)
+> <br>so __don't use an arrow function__ which won't have `this`
+
+This is your top-level render method which should also take care of rendering the current step by calling `renderStep()` on the current [Step](step.md)
+
+You can render a React component [as in this example](https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/complex-branching-flow/render.js)
+
+```
+const render = function () {
+  ReactDOM.render(<Tree tree={this} />, document.getElementById('tree'));
+  ReactDOM.render(<Debug tree={this} />, document.getElementById('debug'));
+};
+```
+
+Or you could do something as simple as
+
+```
+const render = function () {
+  document.getElementById('app').innerHTML = JSON.stringify(this._treeState, null, 2);
+}
+```
+
+Also, it's only called on the last step while fast-forwarding or rewinding
+
 ## deepLinkStepId
 
 ## deepLinkStepUniqueId
