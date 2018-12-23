@@ -1992,7 +1992,7 @@ function () {
       /**
        * Tree render method is required and provided at configuration
        * Tree render should render whatever layout plus the output of
-       * calling `render()` on the current step
+       * calling `renderStep()` on the current step
        */
       render: function render() {},
 
@@ -2283,7 +2283,7 @@ function () {
 
         this._onStep(this._treeState.currentStepUniqueId);
 
-        this.render();
+        this._render();
       } else {
         var keepGoing = function keepGoing() {
           return _this3.getStepByUniqueId(_this3._treeState.currentStepUniqueId).id !== toStepId;
@@ -2295,7 +2295,7 @@ function () {
 
         this._onStep(this._treeState.currentStepUniqueId);
 
-        this.render();
+        this._render();
       }
     } // ///////////////////////////
     // ///////////////////////////
