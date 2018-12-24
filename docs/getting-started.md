@@ -107,5 +107,5 @@ const flow = multiStepUi({
 });
 ```
 
-Now check out the [API Refernce](multi-step-ui.md) and [Examples](https://charlielow.github.io/multi-step-ui/docs/simple-flow-with-react) for more details
+Now check out the [API Refernce](multi-step-ui.md) and [Examples](simple-flow-with-react.md) for more details
 

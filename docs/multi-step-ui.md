@@ -9,13 +9,15 @@ sidebar_label: multiStepUi()
 import { multiStepUi } from 'multi-step-ui';
 ```
 
-`multiStepUi()` is a factory function which expects a `props` object
+`multiStepUi()` is a factory function which expects a `props` object and returns an instance of [Tree](tree.md)
 
 `props` has 2 required properties, [config](#config) and [render()](#render)  
 
 [steps](#steps) and [forks](#forks) are also required for functionality, but won't throw an error if missing
 
 Everything else is optional
+
+> Note, it's recommended you make your instance of [Tree](tree.md) the cental hub for everything in your app, in addition to the properties mentioned here you may also want to store application state on this object
 
 ```
 const instanceOfTree = multiStepUi({
@@ -35,7 +37,12 @@ const instanceOfTree = multiStepUi({
   deepLinkStepUniqueId: '',
   plugins: {},
   onStep(stepUniqueId) {},
-  onComplete() {}
+  onComplete() {},
+
+  // Optionally set custom props like this
+  store: {
+    name: ''
+  }
 
 });
 ```
@@ -118,6 +125,8 @@ const render = function () {
 
 `steps` is an object which maps step `id` (see [config](#config)) to an actual [Step](step.md), as in [this example](https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/sign-up-flow-react/steps.js)
 
+See [Step](step.md) documentation for more info
+
 Example:
 
 ```
@@ -142,6 +151,8 @@ const steps = {
 ## forks
 
 `forks` is an object which maps fork `id` (see [config](#config)) to an actual [Fork](fork.md), as in [this example](https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/simple-flow-react/forks.js)
+
+See [Fork](fork.md) documentation for more info
 
 Example:
 
@@ -205,7 +216,7 @@ Example:
 
 ```
 const onStep = function (stepUniqueId) {
-  console.log(this.getTreeState().currentStepUniqueId);
+  console.log(stepUniqueId === this.getTreeState().currentStepUniqueId);
 }
 ```
 
