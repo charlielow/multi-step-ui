@@ -11,7 +11,11 @@ import { multiStepUi } from 'multi-step-ui';
 
 `multiStepUi()` is a factory function which expects a `props` object
 
-`props` has 2 required properties, [config](#config) and [render()](#render) everything else is optional
+`props` has 2 required properties, [config](#config) and [render()](#render)  
+
+[steps](#steps) and [forks](#forks) are also required for functionality, but won't throw an error if missing
+
+Everything else is optional
 
 ```
 const instanceOfTree = multiStepUi({
@@ -22,12 +26,16 @@ const instanceOfTree = multiStepUi({
   },
   render: function () {}
   
+  // Mappings
+  steps: {},
+  forks: {},
+
   // Optional
   deepLinkStepId: '',
   deepLinkStepUniqueId: '',
   plugins: {},
   onStep(stepUniqueId) {},
-  onComplete() {},
+  onComplete() {}
 
 });
 ```
@@ -104,7 +112,51 @@ const render = function () {
 }
 ```
 
-Also, `render()` is only called on the last step while fast-forwarding or rewinding
+`render()` is only called on the last step while fast-forwarding or rewinding
+
+## steps
+
+`steps` is an object which maps step `id` (see [config](#config)) to an actual [Step](step.md), as in [this example](https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/sign-up-flow-react/steps.js)
+
+Example:
+
+```
+const steps = {
+  createAccount: {
+    renderStep: function(props) {
+      let tree = props.tree;
+      // ..
+      return ''; // return a string or a React component to render
+    },
+    isValid: function(props) {
+      let tree = props.tree;
+      if (tree.store.email && tree.store.email.length) {
+        return true;
+      }
+      return false;
+    }
+  }
+};
+```
+
+## forks
+
+`forks` is an object which maps fork `id` (see [config](#config)) to an actual [Fork](fork.md), as in [this example](https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/simple-flow-react/forks.js)
+
+Example:
+
+
+```
+const forks = {
+  forkOne: {
+    getNextBranch: function(props) {
+      let tree = props.tree;
+      return tree.store.memberType;
+    }
+  }
+};
+```
+
 
 ## deepLinkStepId
 
