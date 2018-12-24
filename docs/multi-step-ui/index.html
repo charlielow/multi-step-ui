@@ -37,10 +37,13 @@
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">multiStepUi(props)</h1></header><article><div><span><pre><code class="hljs"><span class="hljs-keyword">import</span> { multiStepUi } <span class="hljs-keyword">from</span> <span class="hljs-string">'multi-step-ui'</span>;
 </code></pre>
-<p><code>multiStepUi()</code> is a factory function which expects a <code>props</code> object</p>
+<p><code>multiStepUi()</code> is a factory function which expects a <code>props</code> object and returns an instance of <a href="/multi-step-ui/docs/tree">Tree</a></p>
 <p><code>props</code> has 2 required properties, <a href="#config">config</a> and <a href="#render">render()</a></p>
 <p><a href="#steps">steps</a> and <a href="#forks">forks</a> are also required for functionality, but won't throw an error if missing</p>
 <p>Everything else is optional</p>
+<blockquote>
+<p>Note, it's recommended you make your instance of <a href="/multi-step-ui/docs/tree">Tree</a> the cental hub for everything in your app, in addition to the properties mentioned here you may also want to store application state on this object</p>
+</blockquote>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> instanceOfTree = multiStepUi({
   
   <span class="hljs-comment">// Required</span>
@@ -58,7 +61,12 @@
   deepLinkStepUniqueId: <span class="hljs-string">''</span>,
   plugins: {},
   onStep(stepUniqueId) {},
-  onComplete() {}
+  onComplete() {},
+
+  <span class="hljs-comment">// Optionally set custom props like this</span>
+  store: {
+    name: <span class="hljs-string">''</span>
+  }
 
 });
 </code></pre>
@@ -124,6 +132,7 @@
 <p><code>render()</code> is only called on the last step while fast-forwarding or rewinding</p>
 <h2><a class="anchor" aria-hidden="true" id="steps"></a><a href="#steps" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>steps</h2>
 <p><code>steps</code> is an object which maps step <code>id</code> (see <a href="#config">config</a>) to an actual <a href="/multi-step-ui/docs/step">Step</a>, as in <a href="https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/sign-up-flow-react/steps.js">this example</a></p>
+<p>See <a href="/multi-step-ui/docs/step">Step</a> documentation for more info</p>
 <p>Example:</p>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> steps = {
   <span class="hljs-attr">createAccount</span>: {
@@ -144,6 +153,7 @@
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="forks"></a><a href="#forks" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>forks</h2>
 <p><code>forks</code> is an object which maps fork <code>id</code> (see <a href="#config">config</a>) to an actual <a href="/multi-step-ui/docs/fork">Fork</a>, as in <a href="https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/import/simple-flow-react/forks.js">this example</a></p>
+<p>See <a href="/multi-step-ui/docs/fork">Fork</a> documentation for more info</p>
 <p>Example:</p>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> forks = {
   <span class="hljs-attr">forkOne</span>: {
@@ -184,7 +194,7 @@
 <p><code>onStep()</code> is passed the current <a href="/multi-step-ui/docs/step">Step</a> <code>stepUniqueId</code> and called on step change, called when moving forward and back</p>
 <p>Example:</p>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> onStep = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">stepUniqueId</span>) </span>{
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.getTreeState().currentStepUniqueId);
+  <span class="hljs-built_in">console</span>.log(stepUniqueId === <span class="hljs-keyword">this</span>.getTreeState().currentStepUniqueId);
 }
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="oncomplete"></a><a href="#oncomplete" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onComplete()</h2>
