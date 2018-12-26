@@ -1,7 +1,5 @@
 import { Tree, multiStepUi } from '../src/multi-step-ui';
 
-const _ = require('lodash');
-
 const config = require('./data/config-basic-sign-up.json');
 const configNoForks = require('./data/config-no-forks.json');
 const configFullSignUp = require('./data/config-full-sign-up.json');
@@ -530,6 +528,106 @@ describe('Tree', () => {
       });
 
       expect(t.getTreeState()).toEqual(t._treeState);
+    });
+  });
+
+  describe('resetTreeState', () => {
+
+  });
+
+  describe('Protected methods', () => {
+    let t;
+
+    beforeEach(() => {
+      class Fork {
+        getNextBranch() {
+          return 'branchA';
+        }
+      }
+
+      const plugins = {
+        router: {
+          init: jest.fn(),
+          render: jest.fn(),
+          onStep: jest.fn(),
+          onComplete: jest.fn()
+        },
+        somethingElse: {
+          init: jest.fn()
+        },
+        anEmptyOne: {}
+      };
+
+
+      t = new Tree({
+        config,
+        plugins,
+        forks: {
+          forkOne: {
+            getNextBranch: () => {
+              return 'buyer';
+            },
+          }
+        },
+        render: jest.fn(),
+        onStep: jest.fn(),
+        onComplete: jest.fn(),
+        deepLinkStepUniqueId: 'stepTwo2'
+      });
+    });
+
+    describe('_deepLink', () => {
+      test('Should deep link to a `deepLinkStepUniqueId`', () => {
+        expect(t.getTreeState().currentStepUniqueId).toBe('stepTwo2');
+        t.resetTreeState();
+        expect(t.getTreeState().currentStepUniqueId).toBe('createAccount1');
+      });
+      test('Should deep link to a `deepLinkStepId`', () => {
+        t = new Tree({
+          config,
+          forks: {
+            forkOne: {
+              getNextBranch: () => {
+                return 'buyer';
+              },
+            }
+          },
+          render: () => {},
+          deepLinkStepId: 'stepTwo'
+        });
+
+        expect(t.getTreeState().currentStepUniqueId).toBe('stepTwo2');
+      });
+    });
+
+    describe('_initPlugins', () => {
+      test('Should call `init` for each plugin via Tree constructor', () => {
+        expect(t.plugins.router.init).toHaveBeenCalled();
+        expect(t.plugins.somethingElse.init).toHaveBeenCalled();
+      });
+    });
+
+    describe('_render', () => {
+      test('Should call `render` for Tree and for each plugin', () => {
+        expect(t.render).toHaveBeenCalled();
+        expect(t.plugins.router.render).toHaveBeenCalled();
+      });
+    });
+
+    describe('_onStep', () => {
+      test('Should call `onStep` for Tree and for each plugin', () => {
+        expect(t.onStep).toHaveBeenCalled();
+        expect(t.plugins.router.onStep).toHaveBeenCalled();
+      });
+    });
+
+    describe('_onComplete', () => {
+      test('Should call `onComplete` for Tree and for each plugin', () => {
+        t.stepForward();
+        t.stepForward();
+        expect(t.onComplete).toHaveBeenCalledTimes(1);
+        expect(t.plugins.router.onComplete).toHaveBeenCalledTimes(1);
+      });
     });
   });
 });

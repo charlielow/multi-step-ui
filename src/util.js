@@ -2,8 +2,8 @@ const util = {
 
   /**
    * Run some code on each step in the tree
-   * @param  {Array}   config   Tree.config
-   * @param  {Function} callback recieves current Step,
+   * @param {Array} config Tree.config
+   * @param {Function} callback recieves current Step,
    * count (not index in branch, but count) and current Branch
    * @return {undefined}
    */
@@ -31,8 +31,8 @@ const util = {
   /**
    * Return index of step in branch
    * replacement for _.indexOf()
-   * @param  {Array} branch
-   * @param  {Object} n Step
+   * @param {Array} branch
+   * @param {Object} n Step
    * @return {Number}
    */
   indexOfStepInBranch(branch, step) {

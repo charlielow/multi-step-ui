@@ -17,7 +17,7 @@ import { multiStepUi } from 'multi-step-ui';
 
 Everything else is optional
 
-> Note, it's recommended you make your instance of [Tree](tree.md) the cental hub for everything in your app, in addition to the properties mentioned here you may also want to store application state on this object
+> Note, it's recommended you make your instance of [Tree](tree.md) the cental hub for everything in your app, in addition to the properties mentioned here you may also want to store application state on this object, shown in the `store` property below, however this is outside the scope of the framework
 
 ```
 const instanceOfTree = multiStepUi({
@@ -98,7 +98,7 @@ const instanceOfTree = multiStepUi({
 The `render()` method is always called after changing steps and is responsible for rendering your UI
 
 > Note, `render()`, like other methods, is called in the context of your [Tree](tree.md)
-> <br>so __don't use an arrow function__ which won't have `this`
+> <br>so __don't use an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)__ which won't have `this`
 
 This is your top-level render method which should also take care of rendering the current step by calling `renderStep()` on the current [Step](step.md)
 
@@ -193,7 +193,7 @@ Plugins are objects which implement any or all of the following methods
 `onComplete()` 
 
 > Note, methods are called in the context of your [Tree](tree.md)
-> <br>so __don't use an arrow function__ which won't have `this`
+> <br>so __don't use an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)__ which won't have `this`
 
 
 Example:

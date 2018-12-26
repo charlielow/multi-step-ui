@@ -11,7 +11,7 @@ Steps collect user info via form inputs and validate on submit.
 There are 3 sections rendered on the page.
 
 1. __Tree__: a visual representation of the Multi-Step UI flow tree
-2. __Render__: The current step wrapped in a layout component
+2. __Render__: the current step wrapped in a layout component
 3. __Debug__: JSON representation of current state
 
 <a href="https://github.com/charlielow/multi-step-ui/blob/master/website/static/js/src/simple-flow-react.js" target="_blank">View source files</a> <sup>↑</sup>

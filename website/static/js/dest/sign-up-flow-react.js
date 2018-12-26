@@ -2071,8 +2071,8 @@ function () {
    * and functionality is merged and made accessible in the
    * context of the Tree instance
    *
-   * @param  {Object} config TODO: see documentation
-   * @return {Object}        New config
+   * @param  {Object} config
+   * @return {Object} new config
    */
 
 
@@ -2174,7 +2174,7 @@ function () {
      *
      * @param {Boolean} isFastForwarding
      *
-     * @return {String} Next step uniqueId
+     * @return {String} next step uniqueId
      */
 
   }, {
@@ -2218,7 +2218,7 @@ function () {
     }
     /**
      * Step _treeState back by one
-     * @return {String} Last histroy item
+     * @return {String} last histroy item
      */
 
   }, {
@@ -2308,14 +2308,20 @@ function () {
 
       if (!uniqueId || typeof uniqueId !== 'string') {
         throw new Error('getStepByUniqueId called with missing or invalid `uniqueId`');
-      } // TODO: break on finding step
+      }
 
-
-      _util.default.mapEachStep(this.config, function (step) {
-        if (step.uniqueId === uniqueId) {
-          ret = step;
+      try {
+        _util.default.mapEachStep(this.config, function (step) {
+          if (step.uniqueId === uniqueId) {
+            ret = step;
+            throw new Error('END');
+          }
+        });
+      } catch (err) {
+        if (err.message !== 'END') {
+          throw err;
         }
-      });
+      }
 
       return ret;
     }
@@ -2492,8 +2498,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var util = {
   /**
    * Run some code on each step in the tree
-   * @param  {Array}   config   Tree.config
-   * @param  {Function} callback recieves current Step,
+   * @param {Array} config Tree.config
+   * @param {Function} callback recieves current Step,
    * count (not index in branch, but count) and current Branch
    * @return {undefined}
    */
@@ -2529,8 +2535,8 @@ var util = {
   /**
    * Return index of step in branch
    * replacement for _.indexOf()
-   * @param  {Array} branch
-   * @param  {Object} n Step
+   * @param {Array} branch
+   * @param {Object} n Step
    * @return {Number}
    */
   indexOfStepInBranch: function indexOfStepInBranch(branch, step) {

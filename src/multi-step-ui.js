@@ -113,8 +113,8 @@ class Tree {
    * and functionality is merged and made accessible in the
    * context of the Tree instance
    *
-   * @param  {Object} config TODO: see documentation
-   * @return {Object}        New config
+   * @param  {Object} config
+   * @return {Object} new config
    */
   _mapSteps(config) {
     let count = 1;
@@ -208,7 +208,7 @@ class Tree {
    *
    * @param {Boolean} isFastForwarding
    *
-   * @return {String} Next step uniqueId
+   * @return {String} next step uniqueId
    */
   stepForward(isFastForwarding = false) {
     const { currentStepUniqueId } = this._treeState;
@@ -244,7 +244,7 @@ class Tree {
 
   /**
    * Step _treeState back by one
-   * @return {String} Last histroy item
+   * @return {String} last histroy item
    */
   stepBack(isRewinding = false) {
     const lastHistoryItem = this._treeState.history.pop();
@@ -309,12 +309,18 @@ class Tree {
       throw new Error('getStepByUniqueId called with missing or invalid `uniqueId`');
     }
 
-    // TODO: break on finding step
-    util.mapEachStep(this.config, (step) => {
-      if (step.uniqueId === uniqueId) {
-        ret = step;
+    try {
+      util.mapEachStep(this.config, (step) => {
+        if (step.uniqueId === uniqueId) {
+          ret = step;
+          throw new Error('END');
+        }
+      });
+    } catch (err) {
+      if (err.message !== 'END') {
+        throw err;
       }
-    });
+    }
 
     return ret;
   }
