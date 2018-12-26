@@ -15,6 +15,10 @@ Provides step mapping and navigation through nested branches and a simple, exten
 
 > Multi-Step UI is __not__ a view library, integrate with React or any other templating engine or view library
 
+<p align='center'>
+    <img src='https://charlielow.github.io/multi-step-ui/simple-flow-react.gif' width='800'>
+</p>
+
 ## Install
 
 
